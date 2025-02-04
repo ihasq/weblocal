@@ -18,9 +18,11 @@ import { serve } from "weblocal";
 
 const server = await serve(() => new Response("<h1>Hello</h1>"));
 
-open(server.url, "_blank"); // opens local-only address. e.g. https://zzer2zdjig.weblocal.dev
+open(server.url, "_blank"); // opens local-only address, https://zzer2zdjig.weblocal.dev
 
-server.close();
+await server.clearSiteData()
+
+await server.close();
 ```
 
 ### Static site
