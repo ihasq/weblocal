@@ -10,9 +10,14 @@ const loader = new Promise(r_loader => {
 	document.head.append(loader);
 });
 
+const submissionMap = {
+	latest: undefined,
+	map: {}
+}
+
 const submitBuild = () => new Promise(r_submission => {
 
-})
+});
 
 /**
  * @typedef { (request: Request) => (Response | Promise<Response>) } WebLocalHandler
@@ -21,15 +26,35 @@ const submitBuild = () => new Promise(r_submission => {
  * @returns { Promise<{ url: string, close: () => Promise<void> }> }
  */
 export const serve = (handler) => new Promise(async r_serve => {
-	const buildCompleted = await submitBuild();
-	const typeofHandler = typeof handler;
+	if(!handler) return;
+
+	const
+		buildCompleted = await submitBuild(),
+		typeofHandler = typeof handler
+	;
+
 	handler = typeofHandler == "function"
 		? {
-			
 			handler
 		}
-		: handler
+		: Object.assign({
+
+		}, handler)
 	;
+
 	(await loader).src
+
 	buildCompleted();
+
+	return {
+		url,
+		reloadMode: "auto",
+		reload() {
+
+		},
+		close() {
+
+		}
+	}
 });
+

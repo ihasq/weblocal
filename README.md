@@ -2,7 +2,24 @@
 
 ## About
 
-Opensource implemention of Stackblitz and CodeSandBox's ServiceWorker-based tunneling system.
+Open source implemention of Stackblitz and CodeSandBox's ServiceWorker-based tunneling system.
+
+## Example
+
+### Simple web server
+```javascript
+// From Client JavaScript!
+
+import { serve } from "weblocal";
+
+const server = await serve(() => new Response("<h1>Hello</h1>"));
+
+open(server.url, "_blank"); // opens local-only address. e.g. https://zzer2zdjig.weblocal.dev
+
+server.reloadMode = "auto";
+
+server.close();
+```
 
 ## Motivation
 Developers have long used Object URL or Data URLs to display user-defined documents in serverless environments.\
@@ -12,22 +29,4 @@ Unfortunately, this method does not allow for HTTPS environments, which is a maj
 To run user-defined documents in HTTPS environments, major online IDEs StackBlitz and CodeSandBox have built a "bypass" system into their services that combines ServiceWorker and MessageChannel.\
 This technique is memory-efficient and has low overhead compared to using Object URLs. Despite its usefulness, the online IDE market is so competitive that each company has kept its source private.
 
-So as an individual developer, I reinvented this as an open source implementation from my imagination, with the power of CloudFlare network. 
-
-## Raw server
-```javascript
-// From Client JavaScript!
-
-import { serve } from "weblocal";
-
-const server = await serve(() => new Response("<h1>Hello!</h1>"));
-
-open(server.url, "_blank"); // opens local-only address. e.g. https://zzer2zdjig.weblocal.dev
-
-server.reloadType = "auto";
-
-server.close();
-```
-
-## Self-Hosting
-WebLocal relies on [cloudflare](https://cloudflare.com) to provide server files.
+So as an individual web dev, I reinvented the wheel as an open source low-level implementation from my imagination, with the power of CloudFlare network.
