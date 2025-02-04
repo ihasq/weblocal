@@ -1,0 +1,1 @@
+document.head.append(Object.assign(document.createElement("iframe")))

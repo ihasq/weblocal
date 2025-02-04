@@ -4,9 +4,6 @@
 Opensource implemention of Stackblitz and CodeSandBox's serviceworker-based tunneling strategy.
 
 ## API
-```html
-<iframe hidden onload="import('https://weblocal.dev').then(({ load }) => load(this))"></iframe>
-```
 ```javascript
 import { serve } from "https://weblocal.dev";
 
