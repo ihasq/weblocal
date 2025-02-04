@@ -1,32 +1,29 @@
 # [WebLocal](https://weblocal.dev) - Instant, Isolated localhost environment in your web
 
+## About
+
+Opensource implemention of Stackblitz and CodeSandBox's ServiceWorker-based tunneling system.
+
 ## Motivation
-Opensource implemention of Stackblitz and CodeSandBox's serviceworker-based tunneling strategy.
+Developers have long used object or data URLs to display user-defined documents in serverless environments. This technique is the basic technique used by major technology sites such as MDN to display implementation examples, and has long been used in all demonstrations. Unfortunately, this method does not allow for HTTPS environments, which is a major limitation, especially when demonstrating cutting-edge web technologies (e.g. WebGPU, FileSystem).
 
-## API
+To run user-defined documents in HTTPS environments, major online IDEs StackBlitz and CodeSandBox have built a "bypass" system into their services that combines ServiceWorker and MessageChannel. This technique is memory-efficient and has low overhead compared to using Object URLs. Despite its usefulness, the online IDE market is so competitive that each company has kept its source private.
+
+So, as an individual developer, I reinvented an open source implementation from my imagination with the help of CloudFlare. 
+
+## Raw server
 ```javascript
-import { serve } from "https://weblocal.dev";
+// From Client JavaScript!
 
-const handler = await serve({ directory: Directory });
+import { serve } from "weblocal";
 
-handler.url // returns local-only address. e.g. https://zzer2zdjig.weblocal.dev
+const server = await serve(() => new Response("<h1>Hello!</h1>"));
 
-open(handler.url, "_blank");
+open(server.url, "_blank"); // opens local-only address. e.g. https://zzer2zdjig.weblocal.dev
 
-handler.status.reloadType = "auto";
+server.reloadType = "auto";
 
-handler.close();
+server.close();
 ```
 
-if you're using Vite, bundle exclusion is required.
-```javascript
-// vite.config.js
-
-export default defineConfig({
-	build: {
-		rollupOptions: {
-			external: ['https://weblocal.dev'],
-		},
-	},
-});
-```
+## Self-Hosting
