@@ -1,12 +1,20 @@
 import { serve } from "./serve";
 
-export const serveStatic = async (directoryHandle: FileSystemDirectoryHandle): Promise<StaticServerHandler> => {
+export const serveStatic = async (
+	
+	directoryHandle: FileSystemDirectoryHandle | FileSystemDirectoryEntry
+
+): Promise<StaticServerHandler> => {
 
 	const server = await serve({
 		async handler(req) {
 			return new Response("")
 		}
 	});
+
+	if(directoryHandle instanceof FileSystemDirectoryHandle) {
+		
+	}
 
 	setInterval(() => {
 

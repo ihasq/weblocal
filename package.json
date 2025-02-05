@@ -2,7 +2,7 @@
   "name": "weblocal",
   "version": "0.0.1",
   "description": "Opensource implemention of Stackblitz and CodeSandBox's serviceworker-based tunneling strategy.",
-  "main": "mod.js",
+  "main": "pkg/mod.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

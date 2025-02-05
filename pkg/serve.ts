@@ -1,4 +1,8 @@
-export const serve = async (handler: WebLocalHandler): Promise<ServerHandler | undefined> => {
+export const serve = async (
+	
+	handler: WebLocalHandler
+
+): Promise<ServerHandler | undefined> => {
 
 	if(!handler) return;
 
@@ -11,8 +15,7 @@ export const serve = async (handler: WebLocalHandler): Promise<ServerHandler | u
 		}
 	)));
 
-	const
-		serverDriver = Object.assign({}, typeof handler == "function" ? { handler } : handler)
+	const serverDriver = Object.assign({}, typeof handler == "function" ? { handler } : handler);
 
 	const url = new URL("").href;
 
