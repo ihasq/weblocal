@@ -10,9 +10,11 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
+const html = new Blob(["<script>navigator.serviceWorker.register('./sw.js')</script>"], { type: "text/html" })
+const main = new Blob(["<h1>hello</h1>"], { type: "text/html" })
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
-		return new Response('Hello World!');
+		return new Response(main);
 	},
 } satisfies ExportedHandler<Env>;
