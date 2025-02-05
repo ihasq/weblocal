@@ -29,7 +29,7 @@ await server.close();
 ```javascript
 import { serveStatic } from "weblocal";
 
-const directoryHandle = await window.showDirectoryPicker();
+const directoryHandle = await navigator.storage.getDirectory(); // from OPFS
 
 const server = await serveStatic(directoryHandle);
 
@@ -41,9 +41,9 @@ server.reloadMode = "auto"; // automatically reloads when file changes
 ## Motivation
 Developers have long used Object URL or Data URLs to display user-defined documents in serverless environments.\
 This technique is the basic technique used by major technology sites such as MDN to display implementation examples, and has long been used in all demonstrations.\
-Unfortunately, this method does not allow for HTTPS environments, which is a major limitation, especially when demonstrating cutting-edge web technologies (e.g. WebGPU, FileSystem).
+Unfortunately, this method does not allow HTTPS-specific APIs, which makes impossible to demonstrate cutting-edge web technologies (e.g. WebGPU, FileSystem).
 
-To run user-defined documents in HTTPS environments, major online IDEs StackBlitz and CodeSandBox have built a "bypass" system into their services that combines ServiceWorker and MessageChannel.\
-This technique is memory-efficient and has low overhead compared to using Object URLs. Despite its usefulness, the online IDE market is so competitive that each company has kept its source private.
+To run user-defined documents in HTTPS environments, major online IDEs StackBlitz and CodeSandBox have built a "bypass" system into their services with ServiceWorker and MessageChannel.\
+This technique is memory-efficient and has low overhead compared to using Object URLs. Despite its usefulness, each company has kept its source private because of online IDE market's competitive situation.
 
-So as an individual web dev, I reinvented the wheel as an open source low-level implementation from my imagination, with the CloudFlare's strong network.
+So as an individual web dev, I reinvented the wheel as an open source low-level implementation from my imagination, with the CloudFlare's hardwired network.

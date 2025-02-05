@@ -1,4 +1,11 @@
-type WebLocalHandler = (request: Request) => (Response | Promise<Response>)
+type WebLocalCallback = (request: Request) => (Response | Promise<Response>)
+
+type WebLocalHandler = 
+	WebLocalCallback |
+	{
+		handler: WebLocalCallback
+	}
+;
 
 interface ServerHandler {
 	url: string,
@@ -13,29 +20,21 @@ interface StaticServerHandler extends ServerHandler {
 export const serve = async (handler: WebLocalHandler): Promise<ServerHandler | undefined> => {
 	if(!handler) return;
 
-	const loader = await new Promise(r_loader => document.head.append(Object.assign(
+	const loader: HTMLIFrameElement = await new Promise(r_loader => document.head.append(Object.assign(
 		document.createElement("iframe"),
 		{
-			onload({ target }: UIEvent) {
-				r_loader(target);
+			onload(e: UIEvent) {
+				r_loader(e.target as HTMLIFrameElement);
 			}
 		}
 	)));
 
 	const
-		typeofHandler = typeof handler
-	;
-
-	handler = typeofHandler == "function"
-		? {
-			handler
-		}
-		: Object.assign({
-
-		}, handler)
-	;
+		serverDriver = Object.assign({}, typeof handler == "function" ? { handler } : handler)
 
 	const url = new URL("").href;
+
+	loader.remove();
 
 	return {
 		url,
@@ -49,6 +48,16 @@ export const serve = async (handler: WebLocalHandler): Promise<ServerHandler | u
 };
 
 export const serveStatic = async (directoryHandle: FileSystemDirectoryHandle): Promise<StaticServerHandler> => {
+
+	const server = await serve({
+		async handler(req) {
+			return new Response("")
+		}
+	});
+
+	setInterval(() => {
+
+	}, 0.5 * 1000)
 
 	const url = new URL("").href;
 
