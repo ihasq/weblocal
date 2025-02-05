@@ -37,6 +37,7 @@ open(server.url, "_blank");
 
 server.reloadMode = "auto"; // automatically reloads when file changes
 ```
+## Self hosted
 
 ## Motivation
 Developers have long used Object URL or Data URLs to display user-defined documents in serverless environments.\

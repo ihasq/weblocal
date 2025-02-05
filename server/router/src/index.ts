@@ -10,11 +10,15 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
-const html = new Blob(["<script>navigator.serviceWorker.register('./sw.js')</script>"], { type: "text/html" })
+const html = caches.match("https://weblocal.pages.dev")
 const main = new Blob(["<h1>hello</h1>"], { type: "text/html" })
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
-		return new Response(main);
+		return new Response(main, {
+			headers: {
+				"Content-Security-Policy": "frame-ancestors"
+			}
+		});
 	},
 } satisfies ExportedHandler<Env>;
