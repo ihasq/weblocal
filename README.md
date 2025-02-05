@@ -1,10 +1,10 @@
-# [WebLocal](https://weblocal.dev) - Instant, Isolated localhost environment in your web
+# [🔌 WebLocal](https://weblocal.dev) - Instant, Isolated localhost environment in your web
 
 ### [About](#about) | [Example](#example) | [Motivation](#motivation)
 
 ## About
 
-Open source implemention of Stackblitz and CodeSandBox's ServiceWorker-based tunneling system.
+Open source implemention of StackBlitz and CodeSandBox's ServiceWorker-based tunneling system.
 
 ## Example
 
