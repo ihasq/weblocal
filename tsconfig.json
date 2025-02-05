@@ -4,7 +4,7 @@
 		"module": "esnext",
 		"lib": ["es2020", "dom"],
 		"outDir": "./dist",
-		"rootDir": "./src",
+		"rootDir": "./pkg",
 		"strict": true,
 		"moduleResolution": "node",
 		"baseUrl": "src",
