@@ -10,8 +10,8 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
-const html = caches.match("https://weblocal.pages.dev")
-const main = new Blob(["<h1>hello</h1>"], { type: "text/html" })
+const html = new Blob([/**FILE_PLACEHOLDER_INDEX*/], { type: "text/html" })
+const main = new Blob([/**FILE_PLACEHOLDER_SW*/], { type: "text/html" })
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
