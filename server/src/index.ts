@@ -1,12 +1,15 @@
+const html = new Blob(["<script type='module' src='https://weblocal.pages.dev/client.js'></script>"], { type: "text/html" });
+const sw = new Blob(["console.log('hoho')"], { type: "text/javascript" });
+
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
-		const { pathname } = new URL(request.url);
+		const { pathname, searchParams } = new URL(request.url);
 		switch(pathname) {
 			case "/": {
-				return new Response(`<script type="module" src="${new URL("client.js", env.SW_FILE_HOST).href}"></script>`);
+				return new Response(html);
 			}
 			case "/sw.js": {
-				return new Response(`import from "${new URL("server.js", env.SW_FILE_HOST).href}"`)
+				return new Response(sw);
 			}
 			default: {
 				return new Response("", { status: 404 })
