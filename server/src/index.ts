@@ -10,12 +10,15 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
-const html = new Blob([/**FILE_PLACEHOLDER_INDEX*/], { type: "text/html" })
+const html = new Blob([`<script>navigator.serviceWorker.register("./sw.js", { type: "module" })</script>`], { type: "text/html" });
+const sw = new Blob([`self.addEventListener("fetch", e => e.respondWith(handleFetch(e)))`], { type: "text/html" });
 const main = new Blob([/**FILE_PLACEHOLDER_SW*/], { type: "text/html" })
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
-		return new Response(main, {
+		return new URL(request.url).pathname == "/" && request.headers.get("sec-fetch-dest") !== "iframe"
+		? new Response("", { status: 404 })
+		: new Response(main, {
 			headers: {
 				"Content-Security-Policy": "frame-ancestors"
 			}
