@@ -1,1 +1,1 @@
-self.addEventListener("")
+console.log("hoho")
