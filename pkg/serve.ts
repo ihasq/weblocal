@@ -38,7 +38,7 @@ export const serve: WLServe = async (
 
 	loader.contentWindow?.postMessage(port2, origin, [port2]);
 
-	const { url }: { url: string } = await new Promise(r_init => serverPort.onmessage = async ({ data: { code, id, data } }) => {
+	await new Promise(r_init => serverPort.onmessage = async ({ data: { code, id, data } }) => {
 
 		switch(code) {
 
@@ -59,7 +59,7 @@ export const serve: WLServe = async (
 
 			case "INIT": {
 
-				r_init(data);
+				r_init();
 
 				break;
 			}
@@ -69,7 +69,7 @@ export const serve: WLServe = async (
 	loader.remove();
 
 	return {
-		url,
+		url: origin,
 		async reload() {
 
 		},

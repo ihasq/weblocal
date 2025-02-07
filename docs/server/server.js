@@ -21,7 +21,7 @@ const
 	}
 ;
 
-p_port.then(({ data: { port, url } }) => {
+p_port.then(({ data: port }) => {
 
 	port.onmessage = ({ data: { code, id, data } }) => {
 
@@ -37,7 +37,7 @@ p_port.then(({ data: { port, url } }) => {
 		}
 	}
 
-	port.postMessage({ code: "INIT", data: { url } })
+	port.postMessage({ code: "INIT" })
 });
 
 self.addEventListener("fetch", e => e.respondWith(onfetch(e)), true);
