@@ -35,8 +35,13 @@ export const serve: WLServe = async (
 
 			case "REQUEST": {
 
-				const [body, bodyUsed, cache, credentials, destination, duplex, headers, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url] = data;
-				const response = await serverDriver.handler(new Request(url, { body, cache, credentials, headers, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy }))
+				const
+					[body, bodyUsed, cache, credentials, destination, duplex, headers, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url] = data,
+					response = await serverDriver.handler(new Request(url, { body, cache, credentials, headers, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy })),
+					{ status, statusText } = response
+				;
+
+				serverPort.postMessage({ code: "RESPONSE", id, data: [await response.arrayBuffer(), status, statusText, Object.fromEntries(response.headers.entries())] })
 
 				break;
 			}

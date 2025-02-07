@@ -2,15 +2,16 @@
   "name": "weblocal",
   "version": "0.0.1",
   "description": "Opensource implemention of Stackblitz and CodeSandBox's serviceworker-based tunneling strategy.",
-  "main": "pkg/mod.js",
+  "main": "pkg/mod.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": ""
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ihasq/weblocal.git"
   },
-  "author": "",
+  "author": "ihasq",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ihasq/weblocal/issues"
