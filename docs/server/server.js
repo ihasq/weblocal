@@ -1,3 +1,5 @@
+self.addEventListener("fetch", e => e.respondWith(onfetch(e)), true);
+
 const
 	p_port = new Promise(r_port => self.onmessage = r_port),
 	promiseMap = {},
@@ -41,5 +43,3 @@ p_port.then(({ data: port }) => {
 
 	port.postMessage({ code: "INIT" })
 });
-
-self.addEventListener("fetch", e => e.respondWith(onfetch(e)), true);
