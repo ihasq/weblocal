@@ -7,7 +7,6 @@ export default {
 		switch(pathname) {
 			case "/":
 			case "/index.html": {
-				if(request.headers.get("Sec-Fetch-Dest") !== "iframe") break;
 				return new Response(html);
 			}
 			case "/sw.js": {
