@@ -34,36 +34,44 @@ export const serve: WLServe = async (
 		}
 	)));
 
-	const { port1: serverPort, port2 } = new MessageChannel();
 
-	loader.contentWindow?.postMessage(port2, origin, [port2]);
+	await new Promise(r_init => {
 
-	await new Promise(r_init => serverPort.onmessage = async ({ data: { code, id, data } }) => {
+		const { port1: serverPort, port2 } = new MessageChannel();
 
-		switch(code) {
+		serverPort.onmessage = async ({ data: { code, id, data } }) => {
 
-			case "REQUEST": {
+			switch(code) {
 
-				const
-					[body, bodyUsed, cache, credentials, destination, duplex, headers, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url] = data,
-					response = await serverDriver.handler(new Request(url, { body, cache, credentials, headers, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy })),
-					{ status, statusText } = response
-				;
+				case "REQUEST": {
 
-				const responseBody = await response.arrayBuffer()
+					console.log("req")
 
-				serverPort.postMessage({ code: "RESPONSE", id, data: [responseBody, status, statusText, Object.fromEntries(response.headers.entries())] }, [responseBody])
+					const
+						[body, bodyUsed, cache, credentials, destination, duplex, headers, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url] = data,
+						response = await serverDriver.handler(new Request(url, { body, cache, credentials, headers, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy })),
+						{ status, statusText } = response
+					;
 
-				break;
-			}
+					const responseBody = await response.arrayBuffer()
 
-			case "INIT": {
+					serverPort.postMessage({ code: "RESPONSE", id, data: [responseBody, status, statusText, Object.fromEntries(response.headers.entries())] }, [responseBody])
 
-				r_init(undefined);
+					break;
+				}
 
-				break;
+				case "INIT": {
+
+					console.log("init")
+
+					r_init(undefined);
+
+					break;
+				}
 			}
 		}
+
+		loader.contentWindow?.postMessage(port2, origin, [port2]);
 	})
 
 	loader.remove();

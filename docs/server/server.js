@@ -6,6 +6,8 @@ const
 
 	onfetch = async ({ request }) => {
 
+		console.log("fetch")
+
 		const
 			{ data: port } = await p_port,
 			{ body, bodyUsed, cache, credentials, destination, duplex, headers, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url } = request,
