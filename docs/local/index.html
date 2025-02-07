@@ -1,0 +1,9 @@
+<title>loader</title>
+<script>
+	if(window !== parent) {
+		navigator.serviceWorker.register("./sw.js", { scope: "/local" });
+		await navigator.serviceWorker.ready;
+		open("./")
+	};
+
+</script>

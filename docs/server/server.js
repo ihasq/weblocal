@@ -3,7 +3,7 @@ const
 	promiseMap = {},
 
 	getRand = () => Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
-	handleFetch = async ({ request }) => {
+	handleFetch = async ({ request, target }) => {
 
 		console.log("fetch")
 	

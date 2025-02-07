@@ -1,5 +1,5 @@
-const html = new Blob(["<script type='module' src='https://weblocal.pages.dev/server/client.js'></script>"], { type: "text/html" });
-const sw = new Blob(["importScripts('https://weblocal.pages.dev/server/server.js');"], { type: "text/javascript" });
+const html = new Blob(["<script type='module' src='https://weblocal.dev/server/client.js'></script>"], { type: "text/html" });
+const sw = new Blob(["importScripts('https://weblocal.dev/server/server.js');"], { type: "text/javascript" });
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {

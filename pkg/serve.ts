@@ -1,3 +1,5 @@
+import { localPort } from "./local"
+
 const registrationMap = {};
 
 export const serve: WLServe = async (
@@ -15,7 +17,7 @@ export const serve: WLServe = async (
 		origin: (address: string) => `https://${address}.weblocal.dev`,
 		endpoint: "https://weblocal.pages.dev/new"
 
-	}, typeof handler == "function" ? { handler } : handler);
+	}, typeof handler == "function" ? Object.assign({ handler }, options) : handler);
 
 
 	let address;
@@ -49,7 +51,7 @@ export const serve: WLServe = async (
 
 					const
 						[body, bodyUsed, cache, credentials, destination, duplex, headers, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url] = data,
-						response = await serverDriver.handler(new Request(url, { body, cache, credentials, headers, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy })),
+						response = await serverDriver.handler(new Request(url, { body, cache, credentials, headers, integrity, keepalive, method, redirect, referrer, referrerPolicy })),
 						{ status, statusText } = response
 					;
 

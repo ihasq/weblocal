@@ -1,4 +1,12 @@
-if(window !== window.parent) {
+const { target: connector } = await new Promise(r_connector => document.head.append(Object.assign(
+	document.querySelector("iframe"),
+	{
+		src: `https://weblocal.dev/local?hostname=${encodeURIComponent(location.hostname)}`,
+		onload: r_connector
+	}
+)));
+
+if(connector.contentWindow.title == "connect") {
 
 	navigator.serviceWorker.register("./sw.js");
 	
@@ -10,5 +18,8 @@ if(window !== window.parent) {
 	]);
 	
 	sw.postMessage(port, [port]);
-
+	
+	open("./", "self");
+} else {
+	console.log("nah")
 }
