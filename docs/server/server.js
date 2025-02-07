@@ -17,7 +17,7 @@ const
 
 		port.postMessage({ code: "REQUEST", id, data: [body, bodyUsed, cache, credentials, destination, duplex, serializedHeaders, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url] }, body ? [body] : null);
 
-		return new Promise(r_response => promiseMap[id] = r_response).then(([body, status, statusText, headers]) => new Response(body, { status, statusText, headers }))
+		return await new Promise(r_response => promiseMap[id] = r_response).then(([body, status, statusText, headers]) => new Response(body, { status, statusText, headers }))
 	}
 ;
 
