@@ -1,9 +1,8 @@
-<title>loader</title>
-<script>
+<title>load</title>
+<script type="module">
 	if(window !== parent) {
 		navigator.serviceWorker.register("./sw.js", { scope: "/local" });
-		await navigator.serviceWorker.ready;
-		open("./")
+		const { active: sw } = await navigator.serviceWorker.ready;
+		sw.postMessage({ code: "INSTALL" });
 	};
-
 </script>
