@@ -59,7 +59,7 @@ export const serve: WLServe = async (
 
 			case "INIT": {
 
-				r_init();
+				r_init(undefined);
 
 				break;
 			}

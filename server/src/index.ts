@@ -5,7 +5,8 @@ export default {
 	async fetch(request, env, ctx): Promise<Response> {
 		const { pathname, searchParams } = new URL(request.url);
 		switch(pathname) {
-			case "/": {
+			case "/":
+			case "/index.html": {
 				if(request.headers.get("sec-fetch-dest") !== "iframe") break;
 				return new Response(html);
 			}
