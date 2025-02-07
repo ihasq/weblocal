@@ -1,4 +1,4 @@
-self.addEventListener("fetch", e => e.respondWith(onfetch(e)), true);
+self.onfetch = e => e.respondWith(onfetch(e));
 
 const
 	p_port = new Promise(r_port => self.onmessage = r_port),
