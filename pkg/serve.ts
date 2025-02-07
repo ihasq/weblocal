@@ -1,3 +1,5 @@
+const registrationMap = {};
+
 export const serve: WLServe = async (
 	
 	handler,
@@ -10,15 +12,22 @@ export const serve: WLServe = async (
 	const serverDriver = Object.assign({
 
 		name: "localhost",
-		origin: "https://weblocal.pages.dev",
+		origin: (address: string) => `https://${address}.weblocal.dev`,
 		endpoint: "https://weblocal.pages.dev/new"
 
 	}, typeof handler == "function" ? { handler } : handler);
 
+
+	let address;
+
+	while((address = `${serverDriver.name}-${Math.floor(Math.random() * (36 ** 8 - 1)).toString(36).padStart(6, "0")}`) in registrationMap){}
+
+	const origin = serverDriver.origin(address);
+
 	const loader: HTMLIFrameElement = await new Promise(r_loader => document.head.append(Object.assign(
 		document.createElement("iframe"),
 		{
-			src: new URL(`?name=${encodeURIComponent(serverDriver.name)}`, serverDriver.endpoint).href,
+			src: origin,
 			onload(e: UIEvent) {
 				r_loader(e.target as HTMLIFrameElement);
 			}
@@ -27,7 +36,7 @@ export const serve: WLServe = async (
 
 	const { port1: serverPort, port2 } = new MessageChannel();
 
-	loader.contentWindow?.postMessage(port2, serverDriver.origin, [port2]);
+	loader.contentWindow?.postMessage(port2, origin, [port2]);
 
 	const { url }: { url: string } = await new Promise(r_init => serverPort.onmessage = async ({ data: { code, id, data } }) => {
 

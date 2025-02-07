@@ -7,11 +7,7 @@ export default {
 		switch(pathname) {
 			case "/": {
 				if(request.headers.get("sec-fetch-dest") !== "iframe") break;
-				return new Response(html, {
-					headers: {
-						"Content-Security-Policy": "frame-ancestors https://weblocal.pages.dev;"
-					}
-				});
+				return new Response(html);
 			}
 			case "/sw.js": {
 				return new Response(sw);
