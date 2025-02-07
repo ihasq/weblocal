@@ -5,7 +5,7 @@ if(window !== window.parent) {
 	const [{ active: sw }, { data: port }] = await Promise.all([
 	
 		navigator.serviceWorker.ready,
-		new Promise(r_port => globalThis.onmessage = r_port)
+		new Promise(r_port => self.onmessage = r_port)
 	
 	]);
 	
