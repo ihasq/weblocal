@@ -1,10 +1,11 @@
 import { serve } from "./serve";
 
-export const serveStatic = async (
+export const serveStatic: WLServeStatic = async (
 	
-	directoryHandle: FileSystemDirectoryHandle | FileSystemDirectoryEntry
+	directoryRoot,
+	options
 
-): Promise<StaticServerHandler> => {
+) => {
 
 	const server = await serve({
 		async handler(req) {
@@ -12,7 +13,7 @@ export const serveStatic = async (
 		}
 	});
 
-	if(directoryHandle instanceof FileSystemDirectoryHandle) {
+	if(directoryRoot instanceof FileSystemDirectoryHandle) {
 		
 	}
 

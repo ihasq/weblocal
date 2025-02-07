@@ -7,7 +7,7 @@ const
 	onfetch = async ({ request }) => {
 
 		const
-			port = await p_port,
+			{ data: port } = await p_port,
 			{ body, bodyUsed, cache, credentials, destination, duplex, headers, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url } = request,
 			serializedHeaders = Object.fromEntries(headers.entries())
 		;
@@ -21,7 +21,7 @@ const
 	}
 ;
 
-p_port.then(port => {
+p_port.then(({ data: { port, url } }) => {
 
 	port.onmessage = ({ data: { code, id, data } }) => {
 
@@ -36,6 +36,8 @@ p_port.then(port => {
 			}
 		}
 	}
+
+	port.postMessage({ code: "INIT", data: { url } })
 });
 
 self.addEventListener("fetch", e => e.respondWith(onfetch(e)), true);

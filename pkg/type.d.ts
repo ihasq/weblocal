@@ -1,18 +1,41 @@
-type WebLocalCallback = (request: Request) => (Response | Promise<Response>)
+type WLServerCallback = (request: Request) => (Response | Promise<Response>);
 
-type WebLocalHandler = 
-	WebLocalCallback |
-	{
-		handler: WebLocalCallback
-	}
-;
+type WLDirectoryRoot = FileSystemDirectoryHandle | FileSystemCreateWritableOptions;
 
-interface ServerHandler {
+
+
+interface WLServerOptions {
+	origin?: string,
+}
+
+interface WLServerConfig extends WLServerOptions {
+	handler: WLServerCallback
+}
+
+interface WLStaticServerConfig extends WLServerOptions {
+	root: WLDirectoryRoot
+}
+
+
+
+interface WLServerHandler {
 	url: string,
 	close: () => Promise<void>,
 	reload: () => Promise<void>
 }
 
-interface StaticServerHandler extends ServerHandler {
+interface WLStaticServerHandler extends WLServerHandler {
 	reloadMode: string,
 }
+
+
+
+type WLServe =
+	((handler: WLServerCallback, options?: WLServerOptions) => Promise<WLServerHandler | undefined>) |
+	((config: WLServerConfig) => Promise<WLServerHandler | undefined>)
+;
+
+type WLServeStatic =
+	((directoryRoot: WLDirectoryRoot, options?: WLServerOptions) => Promise<WLServerHandler | undefined>) |
+	((config: WLStaticServerConfig) => Promise<WLServerHandler | undefined>)
+;

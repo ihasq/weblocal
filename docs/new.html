@@ -1,20 +1,25 @@
-<script>
+<script type="module">
 	if(window !== window.top) {
 
+		const { data: port } = await new Promise(r_port => globalThis.onmessage = r_port);
+
 		const
-			registered = localStorage.getItem("profile"),
-			name = Object.fromEntries(new URLSearchParams(window.location.search).entries()).name || "localhost"
+			loader = document.querySelector("iframe"),
+			registration = localStorage.getItem("profile"),
+			name = decodeURIComponent(Object.fromEntries(new URLSearchParams(window.location.search).entries()).name) || "localhost"
 		;
 
-		let port;
+		let portStr;
 
-		while(registered.includes(
-			port = `${name}-${Math.floor(Math.random() * (36 ** 8 - 1)).toString(36).padStart(6, "0")}`
+		while(registration.includes(
+			portStr = `${name}-${Math.floor(Math.random() * (36 ** 8 - 1)).toString(36).padStart(6, "0")}`
 		)){}
 
-		localStorage.setItem("profile", `${registered}\0${port}`)
-		document.querySelector("iframe").src = `https://${port}.weblocal.dev`;
-
+		loader.src = `https://${portStr}.weblocal.dev`;
+		await new Promise(r_loader => loader.onload = r_loader);
+		
+		loader.contentWindow.postMessage(port, loader.src, [port]);
+		localStorage.setItem("profile", `${registration}\0${portStr}`)
 	}
 </script>
 <iframe></iframe>
