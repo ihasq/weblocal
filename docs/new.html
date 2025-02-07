@@ -5,7 +5,7 @@
 
 		const
 			loader = document.querySelector("iframe"),
-			registration = localStorage.getItem("profile"),
+			registration = localStorage.getItem("profile") || "",
 			name = decodeURIComponent(Object.fromEntries(new URLSearchParams(window.location.search).entries()).name) || "localhost"
 		;
 
