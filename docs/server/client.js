@@ -1,3 +1,5 @@
+
+
 navigator.serviceWorker.register("./sw.js");
 
 const [{ active: sw }, { data: port }] = await Promise.all([

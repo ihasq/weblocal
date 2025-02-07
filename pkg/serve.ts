@@ -17,6 +17,8 @@ export const serve = async (
 
 	const serverDriver = Object.assign({}, typeof handler == "function" ? { handler } : handler);
 
+	const { port1: serverPort, port2 } = new MessageChannel();
+
 	const url = new URL("").href;
 
 	loader.remove();

@@ -1,23 +1,41 @@
 const
-	p_port = new Promise(r_port => self.onmessage = r_port);
-	promiseMap = {};
+	p_port = new Promise(r_port => self.onmessage = r_port),
+	promiseMap = {},
 
-const onfetch = async ({ request }) => {
-	const port = await p_port;
-	port.postMessage({
-		code: "REQUEST",
-	})
-}
+	getRand = () => Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
 
-self.addEventListener("fetch", e => e.respondWith(onfetch(e)), true);
+	onfetch = async ({ request }) => {
+
+		const
+			port = await p_port,
+			{ body, bodyUsed, cache, credentials, destination, duplex, headers, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url } = request,
+			serializedHeaders = Object.fromEntries(headers.entries())
+		;
+
+		let id;
+		while((id = getRand()) in promiseMap) {};
+
+		port.postMessage({ code: "REQUEST", id, data: [body, bodyUsed, cache, credentials, destination, duplex, serializedHeaders, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url] }, body ? [body] : null);
+
+		return new Promise(r_response => promiseMap[id] = r_response).then(([body, status, statusText, headers]) => new Response(body, { status, statusText, headers }))
+	}
+;
 
 p_port.then(port => {
+
 	port.onmessage = ({ data: { code, id, data } }) => {
+
 		switch(code) {
+
 			case "RESPONSE": {
+
 				promiseMap[id]?.(data);
+				delete promiseMap[id];
+
 				break;
 			}
 		}
 	}
-})
+});
+
+self.addEventListener("fetch", e => e.respondWith(onfetch(e)), true);
