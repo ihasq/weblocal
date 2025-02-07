@@ -41,7 +41,9 @@ export const serve: WLServe = async (
 					{ status, statusText } = response
 				;
 
-				serverPort.postMessage({ code: "RESPONSE", id, data: [await response.arrayBuffer(), status, statusText, Object.fromEntries(response.headers.entries())] })
+				const responseBody = await response.arrayBuffer()
+
+				serverPort.postMessage({ code: "RESPONSE", id, data: [responseBody, status, statusText, Object.fromEntries(response.headers.entries())] }, [responseBody])
 
 				break;
 			}

@@ -9,7 +9,7 @@ export default {
 				if(request.headers.get("sec-fetch-dest") !== "iframe") break;
 				return new Response(html, {
 					headers: {
-						"Content-Security-Policy": "frame-ancestors https://weblocal.dev;"
+						"Content-Security-Policy": "frame-ancestors https://weblocal.pages.dev;"
 					}
 				});
 			}
