@@ -1,4 +1,4 @@
-if(window !== window.parent && window.parent !== window.parent.parent) {
+if(window !== window.parent) {
 
 	navigator.serviceWorker.register("./sw.js");
 	
