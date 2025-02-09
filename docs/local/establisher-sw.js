@@ -7,6 +7,7 @@ const
 self.onmessage = async ({ data: { code, data }, source }) => {
 	let serverIdBuf;
 	while((serverIdBuf = rand()) in serverIdMap){};
+	console.log(data.pub)
 	const pubKey = await crypto.subtle.importKey("raw", tEnc.encode(decodeURIComponent(data.pub)), { name: "ECDSA", namedCurve: "P-521" }, false, ["verify"]);
 	const
 		serverIdComponents = serverIdMap[serverIdBuf] = {},
