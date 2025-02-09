@@ -1,14 +1,13 @@
 const
 	rand = (length = 8, base = 36) => Math.floor(Math.random() * (base ** length - 1)).toString(base).padStart(length, "0"),
-	tEnc = new TextEncoder(),
+	tEnc = new TextEncoder("utf-16"),
 	serverIdMap = {}
 ;
 
 self.onmessage = async ({ data: { code, data }, source }) => {
 	let serverIdBuf;
 	while((serverIdBuf = rand()) in serverIdMap){};
-	console.log(data.pub)
-	const pubKey = await crypto.subtle.importKey("raw", tEnc.encode(decodeURIComponent(data.pub)), { name: "ECDSA", namedCurve: "P-521" }, false, ["verify"]);
+	const pubKey = await crypto.subtle.importKey("raw", tEnc.encode(atob(data.pub)), { name: "ECDSA", namedCurve: "P-521" }, false, ["verify"]);
 	const
 		serverIdComponents = serverIdMap[serverIdBuf] = {},
 		{ port1: serverEstablisherPort, port2: serverEstablisherDest } = new MessageChannel()

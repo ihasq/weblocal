@@ -6,8 +6,7 @@ const
 
 	{ publicKey, privateKey: serverVerifierKey } = await crypto.subtle.generateKey({ name: "ECDSA", namedCurve: "P-521" }, true, ["sign", "verify"]),
 
-	encodedPublicKey = encodeURIComponent(tDec.decode(await crypto.subtle.exportKey("raw", publicKey))),
-
+	encodedPublicKey = btoa(String.fromCharCode.apply(null, new Uint8Array(await crypto.subtle.exportKey("raw", publicKey)) as unknown as number[])),
 	
 	{ target: serverEstablisherFrame }: Event = await new Promise(r_load => document.head.append(
 		Object.assign(
