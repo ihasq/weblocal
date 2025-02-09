@@ -1,6 +1,6 @@
-import { SIGNAL_ORIGIN, ADDRESS_ORIGIN } from "./var";
+import { ESTABLISHER_ORIGIN, ADDRESS_ORIGIN } from "./var";
 import { serverVerifierKey, serverId, establishServer } from "./register"
-import { rand } from "./math";
+import { rand } from "./lib/math";
 
 const registrationMap = {};
 
@@ -28,9 +28,10 @@ export const serve: WLServe = async (
 	if((address = serverDriver.name) in registrationMap) while((address = `${serverDriver.name}-${rand()}`) in registrationMap){};
 
 	const
+		encodedAddress = tEnc.encode(address),
 		origin = serverDriver.origin(`${address}-${serverId}`),
 		signature = await crypto.subtle.sign("ECDSA", serverVerifierKey, tEnc.encode(address)),
-		serverDest = await establishServer(serverId, signature)
+		serverDest = await establishServer(address, encodedAddress, signature)
 	;
 
 	serverDest.onmessage = async ({ data: { code, id, data }, source }) => {
