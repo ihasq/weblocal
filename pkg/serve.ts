@@ -10,7 +10,6 @@ const
 
 	
 	{ target: serverEstablisherFrame }: Event = await new Promise(r_load => document.head.append(
-
 		Object.assign(
 			document.createElement("iframe"),
 			{

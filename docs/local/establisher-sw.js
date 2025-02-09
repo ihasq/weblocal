@@ -30,18 +30,4 @@ self.onmessage = async ({ data: { code, data }, source }) => {
 		serverEstablisherPort.postMessage([serverDestForDocument, serverDestForFrame], [serverDestForDocument, serverDestForFrame])
 	}
 	source.postMessage([serverEstablisherDest, serverIdBuf], [serverEstablisherDest]);
-}
-
-// self.onfetch = e => e.respondWith(handleFetch(e));
-
-// const handleFetch = async ({ request, target }) => {
-// 	if(request.headers.get("sec-fetch-dest") != "iframe") return new Response("", { status: 502 });
-// 	const
-// 		{ addr, type } = Object.fromEntries(new URL(request.url).searchParams.entries()),
-// 		[name, rand, serverId] = addr.split("-"),
-// 		port = serverIdMap[serverId]?.[`${name}-${rand}`]?.[type]
-// 	;
-// 	if(!port) return new Response("", { status: 502 });
-// 	target.postMessage(port, [port]);
-// 	return new Response("", { status: 200 })
-// }
+};
