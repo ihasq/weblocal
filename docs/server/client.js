@@ -4,7 +4,9 @@ const
 		document.createElement("iframe"),
 		{
 			src: `https://weblocal.dev/local?op=connect&origin=${encodeURI(origin)}&location=${location.origin}&destination=${window == parent ? "document" : "frame"}`,
-			onload: r_connector
+			onload({ target }) {
+				r_connector(target)
+			}
 		}
 	))),
 	port = new Promise(r_port => self.onmessage = ({ data, target }) => target === connector.contentWindow ? r_port(data) : 0)

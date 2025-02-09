@@ -1,6 +1,13 @@
 <title>load</title>
 <script type="module">
+	
 	if(window !== parent) {
+
+		const bc = new BroadcastChannel("test");
+
+		bc.onmessage = ({ data }) => console.log(data);
+
+		bc.postMessage(Date.now())
 
 		navigator.serviceWorker.register("./establisher-sw.js", { scope: `/local/` });
 
