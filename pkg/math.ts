@@ -1,0 +1,1 @@
+export const rand36 = (length: number = 8) => Math.floor(Math.random() * (36 ** length - 1)).toString(36).padStart(length, "0")

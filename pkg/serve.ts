@@ -1,6 +1,9 @@
-import { localPort } from "./local"
+import { serverLoader, serverVerifierKey, serverId } from "./local"
+import { rand36 } from "./math";
 
 const registrationMap = {};
+
+const tEnc = new TextEncoder();
 
 export const serve: WLServe = async (
 	
@@ -13,7 +16,7 @@ export const serve: WLServe = async (
 
 	const serverDriver = Object.assign({
 
-		name: "localhost",
+		name: "local",
 		origin: (address: string) => `https://${address}.weblocal.dev`,
 		endpoint: "https://weblocal.pages.dev/new"
 
@@ -22,32 +25,23 @@ export const serve: WLServe = async (
 
 	let address;
 
-	while((address = `${serverDriver.name}-${Math.floor(Math.random() * (36 ** 8 - 1)).toString(36).padStart(6, "0")}`) in registrationMap){}
+	if((address = serverDriver.name) in registrationMap) while((address = `${serverDriver.name}-${rand36()}`) in registrationMap){};
 
-	const origin = serverDriver.origin(address);
+	const origin = serverDriver.origin(`${address}-${serverId}`);
+	
+	const signature = await crypto.subtle.sign("ECDSA", serverVerifierKey, tEnc.encode(address))
 
-	const loader: HTMLIFrameElement = await new Promise(r_loader => document.head.append(Object.assign(
-		document.createElement("iframe"),
-		{
-			src: origin,
-			onload(e: UIEvent) {
-				r_loader(e.target as HTMLIFrameElement);
-			}
-		}
-	)));
-
+	serverLoader.contentWindow?.postMessage({ code: "OPEN", data: { address, signature } }, "https://weblocal.dev", [signature])
 
 	await new Promise(r_init => {
 
 		const { port1: serverPort, port2 } = new MessageChannel();
 
-		serverPort.onmessage = async ({ data: { code, id, data } }) => {
+		serverPort.onmessage = async ({ data: { code, id, data }, source }) => {
 
 			switch(code) {
 
 				case "REQUEST": {
-
-					console.log("req")
 
 					const
 						[body, bodyUsed, cache, credentials, destination, duplex, headers, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url] = data,
@@ -57,26 +51,13 @@ export const serve: WLServe = async (
 
 					const responseBody = await response.arrayBuffer()
 
-					serverPort.postMessage({ code: "RESPONSE", id, data: [responseBody, status, statusText, Object.fromEntries(response.headers.entries())] }, [responseBody])
-
-					break;
-				}
-
-				case "INIT": {
-
-					console.log("init")
-
-					r_init(undefined);
+					source?.postMessage({ code: "RESPONSE", id, data: [responseBody, status, statusText, Object.fromEntries(response.headers.entries())] }, [responseBody])
 
 					break;
 				}
 			}
 		}
-
-		loader.contentWindow?.postMessage(port2, origin, [port2]);
 	})
-
-	loader.remove();
 
 	return {
 		url: origin,
