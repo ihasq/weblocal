@@ -3,7 +3,7 @@ const tEnc = new TextEncoder();
 const serverIdMap = {};
 
 self.onmessage = async ({ data: { code, data }, source }) => {
-	const pubKey = await crypto.subtle.importKey("raw", tEnc.encode(decodeURI(data.pub)), { name: "ECDSA", hash: "SHA-512" }, false, ["verify"])
+	const pubKey = await crypto.subtle.importKey("raw", tEnc.encode(decodeURI(data.pub)), { name: "ECDSA", namedCurve: "P-521" }, false, ["verify"])
 	let serverIdBuf;
 	while((serverIdBuf = rand()) in serverIdMap){};
 	const serverIdComponents = serverIdMap[serverIdBuf] = {};
