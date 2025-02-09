@@ -6,21 +6,32 @@ self.onmessage = ({ data: { code, data }, source }) => {
 	const { pub } = data;
 	let serverIdBuf;
 	while((serverIdBuf = rand()) in serverIdMap){};
-	serverIdMap[serverIdBuf] = {};
-	const { port1: establisherPort, port2: establisherDest } = new MessageChannel();
-	establisherPort.onmessage = () => {
-
+	const serverIdComponents = serverIdMap[serverIdBuf] = {};
+	const { port1: serverEstablisherPort, port2: serverEstablisherDest } = new MessageChannel();
+	serverEstablisherPort.onmessage = ({ data: [msgId, address, encodedAddress, signature] }) => {
+		const
+			{ port1: serverPortForDocument, port2: serverDestForDocument } = new MessageChannel(),
+			{ port1: serverPortForFrame, port2: serverDestForFrame } = new MessageChannel()
+		;
+		Object.assign(serverIdComponents, {
+			document: serverPortForDocument,
+			frame: serverPortForFrame,
+		});
+		serverEstablisherPort.postMessage([serverDestForDocument, serverDestForFrame], [serverDestForDocument, serverDestForFrame])
 	}
-	source.postMessage([establisherDest, serverIdBuf]);
+	source.postMessage([serverEstablisherDest, serverIdBuf], [serverEstablisherDest]);
 }
 
 self.onfetch = e => e.respondWith(handleFetch(e));
 
 const handleFetch = async ({ request, target }) => {
 	if(request.headers.get("sec-fetch-dest") != "iframe") return new Response("", { status: 502 });
-	const { addr, type } = Object.fromEntries(new URL(request.url).searchParams.entries());
-	const [name, rand, serverId] = addr.split("-");
-	serverIdMap[serverId]?.[`${name}-${rand}`]?.[type]
-	target.postMessage();
+	const
+		{ addr, type } = Object.fromEntries(new URL(request.url).searchParams.entries()),
+		[name, rand, serverId] = addr.split("-"),
+		port = serverIdMap[serverId]?.[`${name}-${rand}`]?.[type]
+	;
+	if(!port) return new Response("", { status: 502 });
+	target.postMessage(port, [port]);
 	return new Response("", { status: 200 })
 }
