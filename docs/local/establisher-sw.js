@@ -6,6 +6,7 @@ const
 let serverIdMap = "";
 
 self.onmessage = async ({ data: { code, data }, source }) => {
+	console.log(code, data)
 	switch(code) {
 		case "OPEN": {
 			let serverIdBuf;

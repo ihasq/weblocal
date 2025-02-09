@@ -83,8 +83,10 @@ const
 				}
 			}
 		;
+		console.log(origin)
 
 		(await establishServer(origin)).forEach(serverPort => serverPort.onmessage = serverCallback);
+
 
 		return {
 			url: origin,
