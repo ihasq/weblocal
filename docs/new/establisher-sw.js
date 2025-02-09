@@ -1,18 +1,24 @@
 const rand = (length = 8, base = 36) => Math.floor(Math.random() * (base ** length - 1)).toString(base).padStart(length, "0");
-
+const tEnc = new TextEncoder();
 const serverIdMap = {};
 
-self.onmessage = ({ data: { code, data }, source }) => {
-	const { pub } = data;
+self.onmessage = async ({ data: { code, data }, source }) => {
+	const pubKey = await crypto.subtle.importKey("raw", tEnc.encode(decodeURI(data.pub)), { name: "ECDSA", hash: "SHA-512" }, false, ["verify"])
 	let serverIdBuf;
 	while((serverIdBuf = rand()) in serverIdMap){};
 	const serverIdComponents = serverIdMap[serverIdBuf] = {};
 	const { port1: serverEstablisherPort, port2: serverEstablisherDest } = new MessageChannel();
-	serverEstablisherPort.onmessage = ({ data: [msgId, address, encodedAddress, signature] }) => {
+	serverEstablisherPort.onmessage = async ({ data: [msgId, address, encodedAddress, signature] }) => {
 		const
+			[name, rand, serverId] = address.split("-"),
 			{ port1: serverPortForDocument, port2: serverDestForDocument } = new MessageChannel(),
 			{ port1: serverPortForFrame, port2: serverDestForFrame } = new MessageChannel()
 		;
+		if(
+			serverIdBuf !== serverId ||
+			!(await crypto.subtle.verify({ name: "ECDSA", hash: "SHA-512" }, pubKey, signature, encodedAddress))
+		) return;
+
 		Object.assign(serverIdComponents, {
 			document: serverPortForDocument,
 			frame: serverPortForFrame,

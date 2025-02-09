@@ -58,6 +58,7 @@ const
 
 		}, typeof handler == "function" ? Object.assign({ handler }, options) : handler);
 
+		if(serverDriver.name.includes("-")) return;
 
 		let address;
 
