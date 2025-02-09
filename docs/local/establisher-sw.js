@@ -7,26 +7,24 @@ const
 self.onmessage = async ({ data: { code, data }, source }) => {
 	let serverIdBuf;
 	while((serverIdBuf = rand()) in serverIdMap){};
-	const pubKey = await crypto.subtle.importKey("raw", tEnc.encode(atob(decodeURIComponent(data.pub))), { name: "ECDSA", namedCurve: "P-521" }, false, ["verify"]);
 	const
 		serverIdComponents = serverIdMap[serverIdBuf] = {},
 		{ port1: serverEstablisherPort, port2: serverEstablisherDest } = new MessageChannel()
 	;
-	serverEstablisherPort.onmessage = async ({ data: [msgId, address, encodedAddress, signature] }) => {
+	serverEstablisherPort.onmessage = async ({ data: [msgId, address] }) => {
 		const
-			[name, rand, serverId] = address.split("-"),
 			{ port1: serverPortForDocument, port2: serverDestForDocument } = new MessageChannel(),
 			{ port1: serverPortForFrame, port2: serverDestForFrame } = new MessageChannel()
 		;
-		if(
-			serverIdBuf !== serverId ||
-			!(await crypto.subtle.verify({ name: "ECDSA", hash: "SHA-512" }, pubKey, signature, encodedAddress))
-		) return;
+		// if(serverIdBuf !== serverId) return;
 
 		Object.assign(serverIdComponents, {
-			document: serverPortForDocument,
-			frame: serverPortForFrame,
+			[origin]: {
+				document: serverPortForDocument,
+				frame: serverPortForFrame,
+			}
 		});
+
 		serverEstablisherPort.postMessage([serverDestForDocument, serverDestForFrame], [serverDestForDocument, serverDestForFrame])
 	}
 	source.postMessage([serverEstablisherDest, serverIdBuf], [serverEstablisherDest]);

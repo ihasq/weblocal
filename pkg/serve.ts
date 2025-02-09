@@ -2,17 +2,12 @@ import { ESTABLISHER_ORIGIN, ADDRESS_ORIGIN } from "./var";
 import { rand } from "./lib/math";
 
 const
-	tEnc = new TextEncoder(), tDec = new TextDecoder(),
-
-	{ publicKey, privateKey: serverVerifierKey } = await crypto.subtle.generateKey({ name: "ECDSA", namedCurve: "P-521" }, true, ["sign", "verify"]),
-
-	encodedPublicKey = encodeURIComponent(btoa(String.fromCharCode.apply(null, new Uint8Array(await crypto.subtle.exportKey("raw", publicKey)) as unknown as number[]))),
 	
 	{ target: serverEstablisherFrame }: Event = await new Promise(r_load => document.head.append(
 		Object.assign(
 			document.createElement("iframe"),
 			{
-				src: new URL(`/local?op=open&pub=${encodedPublicKey}`, ESTABLISHER_ORIGIN).href,
+				src: new URL(`/local?op=open`, ESTABLISHER_ORIGIN).href,
 				onload: r_load
 
 			}
@@ -33,10 +28,10 @@ const
 	),
 
 	establishmentMsgMap: { [key: string]: Function } = {},
-	establishServer = (address: string, encodedAddress: Uint8Array, signature: ArrayBuffer): Promise<[MessagePort, MessagePort]> => {
+	establishServer = (address: string): Promise<[MessagePort, MessagePort]> => {
 		let msgId;
 		while((msgId = rand()) in establishmentMsgMap){};
-		serverEstablisherPort.postMessage([msgId, address, encodedAddress, signature], [encodedAddress.buffer, signature]);
+		serverEstablisherPort.postMessage([msgId, address]);
 		return new Promise(r_void => establishmentMsgMap[msgId] = r_void);
 	},
 
@@ -65,9 +60,7 @@ const
 		if((address = serverDriver.name) in registrationMap) while((address = `${serverDriver.name}-${rand()}`) in registrationMap){};
 
 		const
-			encodedAddress = tEnc.encode(address),
 			origin = serverDriver.origin(`${address}-${serverId}`),
-			signature = await crypto.subtle.sign("ECDSA", serverVerifierKey, tEnc.encode(address)),
 
 			serverCallback = async ({ data: { code, id, data }, source }: MessageEvent) => {
 
@@ -91,15 +84,7 @@ const
 			}
 		;
 
-		(await establishServer(address, encodedAddress, signature)).forEach(serverPort => serverPort.onmessage = serverCallback);
-
-		// await new Promise(r_init => {
-
-		// 	const { port1: signalPort, port2: signalDest } = new MessageChannel();
-
-		// 	const { port1: serverPort, port2: serverDest } = new MessageChannel();
-
-		// })
+		(await establishServer(address)).forEach(serverPort => serverPort.onmessage = serverCallback);
 
 		return {
 			url: origin,
@@ -112,7 +97,6 @@ const
 		}
 	}
 ;
-console.log(encodedPublicKey);
 
 serverEstablisherPort.onmessage = ({ data: [msgId, serverPortForDocument, serverPortForFrame] }) => establishmentMsgMap[msgId]?.([serverPortForDocument, serverPortForFrame]);
 
