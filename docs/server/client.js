@@ -12,8 +12,6 @@ const
 
 navigator.serviceWorker.register("./sw.js");
 
-const { active: sw } = navigator.serviceWorker.ready;
-
 navigator.serviceWorker.onmessage = ({ data: { code } }) => {
 	switch(code) {
 		case "OK": {
@@ -22,5 +20,6 @@ navigator.serviceWorker.onmessage = ({ data: { code } }) => {
 		}
 	}
 }
+const { active: sw } = await navigator.serviceWorker.ready;
 
 sw.postMessage(port, [port]);
