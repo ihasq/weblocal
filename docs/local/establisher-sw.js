@@ -7,7 +7,7 @@ const
 self.onmessage = async ({ data: { code, data }, source }) => {
 	let serverIdBuf;
 	while((serverIdBuf = rand()) in serverIdMap){};
-	const pubKey = await crypto.subtle.importKey("raw", tEnc.encode(atob(data.pub)), { name: "ECDSA", namedCurve: "P-521" }, false, ["verify"]);
+	const pubKey = await crypto.subtle.importKey("raw", tEnc.encode(atob(decodeURIComponent(data.pub))), { name: "ECDSA", namedCurve: "P-521" }, false, ["verify"]);
 	const
 		serverIdComponents = serverIdMap[serverIdBuf] = {},
 		{ port1: serverEstablisherPort, port2: serverEstablisherDest } = new MessageChannel()
