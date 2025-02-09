@@ -7,7 +7,7 @@ const
 		Object.assign(
 			document.createElement("iframe"),
 			{
-				src: new URL(`/local?op=open`, ESTABLISHER_ORIGIN).href,
+				src: new URL(`/local?op=open&location=${location.origin}`, ESTABLISHER_ORIGIN).href,
 				onload: r_load
 
 			}

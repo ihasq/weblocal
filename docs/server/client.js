@@ -3,7 +3,7 @@ const
 	{ target: connector } = await new Promise(r_connector => document.head.append(Object.assign(
 		document.createElement("iframe"),
 		{
-			src: `https://weblocal.dev/local?op=connect&origin=${encodeURI(origin)}&destination=${window == parent ? "document" : "frame"}`,
+			src: `https://weblocal.dev/local?op=connect&origin=${encodeURI(origin)}&location=${location.origin}&destination=${window == parent ? "document" : "frame"}`,
 			onload: r_connector
 		}
 	))),
