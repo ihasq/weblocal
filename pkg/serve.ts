@@ -12,7 +12,7 @@ const
 		Object.assign(
 			document.createElement("iframe"),
 			{
-				src: new URL(`/new?pub=${encodedPublicKey}`, ESTABLISHER_ORIGIN).href,
+				src: new URL(`/local?op=open&pub=${encodedPublicKey}`, ESTABLISHER_ORIGIN).href,
 				onload: r_load
 
 			}
