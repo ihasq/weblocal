@@ -1,5 +1,6 @@
-import { serverLoader, serverVerifierKey, serverId } from "./local"
-import { rand36 } from "./math";
+import { SIGNAL_ORIGIN, ADDRESS_ORIGIN } from "./var";
+import { serverVerifierKey, serverId, p_establisherPort } from "./register"
+import { rand } from "./math";
 
 const registrationMap = {};
 
@@ -17,21 +18,21 @@ export const serve: WLServe = async (
 	const serverDriver = Object.assign({
 
 		name: "local",
-		origin: (address: string) => `https://${address}.weblocal.dev`,
-		endpoint: "https://weblocal.pages.dev/new"
+		origin: ADDRESS_ORIGIN,
 
 	}, typeof handler == "function" ? Object.assign({ handler }, options) : handler);
 
 
 	let address;
 
-	if((address = serverDriver.name) in registrationMap) while((address = `${serverDriver.name}-${rand36()}`) in registrationMap){};
+	if((address = serverDriver.name) in registrationMap) while((address = `${serverDriver.name}-${rand()}`) in registrationMap){};
 
-	const origin = serverDriver.origin(`${address}-${serverId}`);
-	
-	const signature = await crypto.subtle.sign("ECDSA", serverVerifierKey, tEnc.encode(address))
+	const
+		origin = serverDriver.origin(`${address}-${serverId}`),
+		signature = await crypto.subtle.sign("ECDSA", serverVerifierKey, tEnc.encode(address))
+	;
 
-	serverLoader.contentWindow?.postMessage({ code: "OPEN", data: { address, signature } }, "https://weblocal.dev", [signature])
+	(await p_establisherPort).postMessage({ code: "OPEN", data: { address, signature } }, [signature])
 
 	await new Promise(r_init => {
 

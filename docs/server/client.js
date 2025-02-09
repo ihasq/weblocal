@@ -1,7 +1,9 @@
+const [address] = location.hostname.split(".");
+
 const { target: connector } = await new Promise(r_connector => document.head.append(Object.assign(
-	document.querySelector("iframe"),
+	document.createElement("iframe"),
 	{
-		src: `https://weblocal.dev/local?hostname=${encodeURIComponent(location.hostname)}`,
+		src: `https://weblocal.dev/local?addr=${encodeURI(address)}`,
 		onload: r_connector
 	}
 )));

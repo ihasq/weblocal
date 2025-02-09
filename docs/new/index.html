@@ -1,0 +1,14 @@
+<title>load</title>
+<script type="module">
+	if(window !== parent) {
+
+		const { id, pub } = Object.fromEntries(new URLSearchParams(location.search).entries());
+		navigator.serviceWorker.register("./sw.js", { scope: `/local/` });
+		const p_swr = navigator.serviceWorker.ready;
+		self.addEventListener("message", async (...args) => (await p_swr).active.postMessage.apply(null, args), { passive: true });
+		(await p_swr).active.onmessage = ({ data, source }) => {
+
+		}
+		(await p_swr).active.postMessage({ code: "OPEN", data: { id, pub } });
+	};
+</script>
