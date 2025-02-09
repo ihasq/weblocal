@@ -35,7 +35,9 @@ export const serve: WLServe = async (
 
 	await new Promise(r_init => {
 
-		const { port1: serverPort, port2 } = new MessageChannel();
+		const { port1: signalPort, port2: signalDest } = new MessageChannel();
+
+		const { port1: serverPort, port2: serverDest } = new MessageChannel();
 
 		serverPort.onmessage = async ({ data: { code, id, data }, source }) => {
 
@@ -49,9 +51,9 @@ export const serve: WLServe = async (
 						{ status, statusText } = response
 					;
 
-					const responseBody = await response.arrayBuffer()
+					const responseBody = await response.arrayBuffer();
 
-					source?.postMessage({ code: "RESPONSE", id, data: [responseBody, status, statusText, Object.fromEntries(response.headers.entries())] }, [responseBody])
+					(source as MessagePort).postMessage({ code: "RESPONSE", id, data: [responseBody, status, statusText, Object.fromEntries(response.headers.entries())] }, [responseBody])
 
 					break;
 				}
