@@ -15,7 +15,7 @@
 
 		switch(params.op) {
 			case "open": {
-				sw.onmessage = ({ id, data: [msgPort, serverId], source }) => parent.postMessage([msgPort, serverId], [msgPort]);
+				sw.onmessage = ({ id, data: [msgPort, serverId], source }) => window.parent.postMessage([msgPort, serverId], [msgPort]);
 				sw.postMessage({ code: "OPEN" });
 				break;
 			}
@@ -24,7 +24,7 @@
 					{ address, destination } = params,
 					port = serverIdMap[serverId]?.[`${name}-${rand}`]?.[type]
 				;
-				sw.onmessage = ({ data: port }) => parent.postMessage(port, [port]);
+				sw.onmessage = ({ data: port }) => window.parent.postMessage(port, [port]);
 				sw.postMessage({ code: "CONNECT", data: { address, destination } });
 				break;
 			}

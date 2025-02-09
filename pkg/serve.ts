@@ -15,7 +15,7 @@ const
 	)),
 
 	[serverEstablisherPort, serverId]: [MessagePort, string] = await new Promise(
-		r_msgPort =>
+		r_msgPort => (
 			globalThis.addEventListener(
 				"message",
 				async ({ data: [msgPort, serverId], source }) =>
@@ -24,7 +24,7 @@ const
 						: void 0
 				,
 				{ passive: true }
-			)
+			))
 	),
 
 	establishmentMsgMap: { [key: string]: Function } = {},
@@ -83,7 +83,6 @@ const
 				}
 			}
 		;
-		console.log(origin)
 
 		(await establishServer(origin)).forEach(serverPort => serverPort.onmessage = serverCallback);
 
