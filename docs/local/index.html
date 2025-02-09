@@ -11,12 +11,11 @@
 			
 		self.addEventListener("message", async (...args) => (await p_swr).active.postMessage.apply(null, args), { passive: true });
 
+		const sw = (await p_swr).active;
+
 		switch(params.op) {
 			case "open": {
-				const
-					sw = (await p_swr).active
-				;
-				sw.onmessage = ({ data: [msgPort, serverId], source }) => parent.postMessage([msgPort, serverId], [msgPort]);
+				sw.onmessage = ({ id, data: [msgPort, serverId], source }) => parent.postMessage([msgPort, serverId], [msgPort]);
 				sw.postMessage({ code: "OPEN" });
 				break;
 			}
@@ -25,7 +24,8 @@
 					{ address, destination } = params,
 					port = serverIdMap[serverId]?.[`${name}-${rand}`]?.[type]
 				;
-				parent.postMessage(port, [port]);
+				sw.onmessage = ({ data: port }) => parent.postMessage(port, [port]);
+				sw.postMessage({ code: "CONNECT", data: { address, destination } });
 				break;
 			}
 		}
