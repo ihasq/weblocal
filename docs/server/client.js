@@ -14,7 +14,7 @@ navigator.serviceWorker.register("./sw.js");
 
 const { active: sw } = navigator.serviceWorker.ready;
 
-sw.onmessage = ({ data: { code } }) => {
+navigator.serviceWorker.onmessage = ({ data: { code } }) => {
 	switch(code) {
 		case "OK": {
 			open("./", "self");
