@@ -1,8 +1,9 @@
 const
 	rand = (length = 8, base = 36) => Math.floor(Math.random() * (base ** length - 1)).toString(base).padStart(length, "0"),
-	serverIdMap = "",
 	serverMap = {}
 ;
+
+let serverIdMap = "";
 
 self.onmessage = async ({ data: { code, data }, source }) => {
 	switch(code) {
