@@ -1,6 +1,45 @@
 import { ESTABLISHER_ORIGIN, ADDRESS_ORIGIN } from "./var";
-import { serverVerifierKey, serverId, establishServer } from "./register"
 import { rand } from "./lib/math";
+
+const
+	{ publicKey, privateKey: serverVerifierKey } = await crypto.subtle.generateKey({ name: "ECDSA", namedCurve: "P-521" }, true, ["sign", "verify"]),
+	tDec = new TextDecoder(),
+	encodedPublicKey = encodeURI(tDec.decode(await crypto.subtle.exportKey("raw", publicKey))),
+
+	{ target: serverEstablisherFrame }: Event = await new Promise(r_load => document.head.append(
+		Object.assign(
+			document.createElement("iframe"),
+			{
+				src: new URL(`/new?pub=${encodedPublicKey}`, ESTABLISHER_ORIGIN).href,
+				onload: r_load
+
+			}
+		)
+	)),
+
+	[serverEstablisherPort, serverId]: [MessagePort, string] = await new Promise(
+		r_msgPort =>
+			globalThis.addEventListener(
+				"message",
+				async ({ data: [msgPort, serverId], source }) =>
+					source === (serverEstablisherFrame as HTMLIFrameElement)?.contentWindow
+						? r_msgPort([msgPort, serverId])
+						: void 0
+				,
+				{ passive: true }
+			)
+	),
+
+	establishmentMsgMap: { [key: string]: Function } = {},
+	establishServer = (address: string, encodedAddress: Uint8Array, signature: ArrayBuffer): Promise<MessagePort> => {
+		let msgId;
+		while((msgId = rand()) in establishmentMsgMap){};
+		serverEstablisherPort.postMessage({ address, encodedAddress, signature }, [encodedAddress.buffer, signature]);
+		return new Promise(r_void => establishmentMsgMap[msgId] = r_void);
+	}
+;
+
+serverEstablisherPort.onmessage = ({ data: { msgId, serverPort } }) => establishmentMsgMap[msgId]?.(serverPort);
 
 const registrationMap = {};
 

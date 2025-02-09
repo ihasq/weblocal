@@ -1,14 +1,14 @@
 <title>load</title>
 <script type="module">
 	if(window !== parent) {
-		const { id, pub } = Object.fromEntries(new URLSearchParams(location.search).entries());
-		navigator.serviceWorker.register("./sw.js", { scope: `/local/` });
+		const { pub } = Object.fromEntries(new URLSearchParams(location.search).entries());
+		navigator.serviceWorker.register("./local-sw.js", { scope: `/local/` });
 		const p_swr = navigator.serviceWorker.ready;
 		self.addEventListener("message", async (...args) => (await p_swr).active.postMessage.apply(null, args), { passive: true });
 		const sw = (await p_swr).active;
-		sw.onmessage = ({ data, source }) => {
-			parent.postMessage({  })
+		sw.onmessage = ({ data: [msgPort, serverId], source }) => {
+			parent.postMessage([msgPort, serverId])
 		}
-		sw.postMessage({ code: "OPEN", data: { id, pub } });
+		sw.postMessage({ code: "OPEN", data: { pub } });
 	};
 </script>
