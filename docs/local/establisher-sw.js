@@ -12,6 +12,7 @@ self.onmessage = async ({ data: { code, data }, source }) => {
 		serverIdComponents = serverIdMap[serverIdBuf] = {},
 		{ port1: serverEstablisherPort, port2: serverEstablisherDest } = new MessageChannel()
 	;
+	console.log(pubKey)
 	serverEstablisherPort.onmessage = async ({ data: [msgId, address, encodedAddress, signature] }) => {
 		const
 			[name, rand, serverId] = address.split("-"),
