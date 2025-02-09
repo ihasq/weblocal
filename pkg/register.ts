@@ -6,7 +6,7 @@ const
 	tDec = new TextDecoder(),
 	encodedPublicKey = encodeURI(tDec.decode(await crypto.subtle.exportKey("raw", publicKey))),
 	serverId = rand(),
-	p_serverEstablisher: Promise<Event> = new Promise(r_load => document.head.append(
+	{ target: serverEstablisherFrame }: Event = await new Promise(r_load => document.head.append(
 		Object.assign(
 			document.createElement("iframe"),
 			{
@@ -16,16 +16,27 @@ const
 			}
 		)
 	)),
-	p_establisherPort: Promise<MessagePort> = new Promise(
+	serverEstablisherPort: MessagePort = await new Promise(
 		r_msgPort =>
-			globalThis.onmessage = async ({ data, source }) =>
-				source === ((await p_serverEstablisher.target) as HTMLIFrameElement)?.contentWindow
-					? r_msgPort(data)
-					: void 0
+			globalThis.addEventListener(
+				"message",
+				async ({ data: msgPort, source }) =>
+					source === (serverEstablisherFrame as HTMLIFrameElement)?.contentWindow
+						? r_msgPort(msgPort)
+						: void 0
+				,
+				{ passive: true }
+			)
 	),
-	establishPort = async (id: string, pub: string) => {
-		
+	establishmentMsgMap: { [key: string]: Function } = {},
+	establishServer = async (serverId: string, signature: ArrayBuffer): Promise<MessagePort> => {
+		let msgId;
+		while((msgId = rand()) in establishmentMsgMap){};
+		serverEstablisherPort.postMessage({ serverId, signature }, [signature]);
+		return await new Promise(r_void => establishmentMsgMap[msgId] = r_void);
 	}
 ;
 
-export { serverVerifierKey, serverId, p_establisherPort };
+serverEstablisherPort.onmessage = ({ data: { msgId, serverPort } }) => establishmentMsgMap[msgId]?.(serverPort);
+
+export { serverVerifierKey, serverId, establishServer };

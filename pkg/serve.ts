@@ -1,5 +1,5 @@
 import { SIGNAL_ORIGIN, ADDRESS_ORIGIN } from "./var";
-import { serverVerifierKey, serverId, p_establisherPort } from "./register"
+import { serverVerifierKey, serverId, establishServer } from "./register"
 import { rand } from "./math";
 
 const registrationMap = {};
@@ -29,38 +29,37 @@ export const serve: WLServe = async (
 
 	const
 		origin = serverDriver.origin(`${address}-${serverId}`),
-		signature = await crypto.subtle.sign("ECDSA", serverVerifierKey, tEnc.encode(address))
+		signature = await crypto.subtle.sign("ECDSA", serverVerifierKey, tEnc.encode(address)),
+		serverDest = await establishServer(serverId, signature)
 	;
 
-	(await p_establisherPort).postMessage({ code: "OPEN", data: { address, signature } }, [signature])
+	serverDest.onmessage = async ({ data: { code, id, data }, source }) => {
 
-	await new Promise(r_init => {
+		switch(code) {
 
-		const { port1: signalPort, port2: signalDest } = new MessageChannel();
+			case "REQUEST": {
 
-		const { port1: serverPort, port2: serverDest } = new MessageChannel();
+				const
+					[body, bodyUsed, cache, credentials, destination, duplex, headers, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url] = data,
+					response = await serverDriver.handler(new Request(url, { body, cache, credentials, headers, integrity, keepalive, method, redirect, referrer, referrerPolicy })),
+					{ status, statusText } = response
+				;
 
-		serverPort.onmessage = async ({ data: { code, id, data }, source }) => {
+				const responseBody = await response.arrayBuffer();
 
-			switch(code) {
+				(source as MessagePort).postMessage({ code: "RESPONSE", id, data: [responseBody, status, statusText, Object.fromEntries(response.headers.entries())] }, [responseBody])
 
-				case "REQUEST": {
-
-					const
-						[body, bodyUsed, cache, credentials, destination, duplex, headers, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url] = data,
-						response = await serverDriver.handler(new Request(url, { body, cache, credentials, headers, integrity, keepalive, method, redirect, referrer, referrerPolicy })),
-						{ status, statusText } = response
-					;
-
-					const responseBody = await response.arrayBuffer();
-
-					(source as MessagePort).postMessage({ code: "RESPONSE", id, data: [responseBody, status, statusText, Object.fromEntries(response.headers.entries())] }, [responseBody])
-
-					break;
-				}
+				break;
 			}
 		}
-	})
+	}
+	// await new Promise(r_init => {
+
+	// 	const { port1: signalPort, port2: signalDest } = new MessageChannel();
+
+	// 	const { port1: serverPort, port2: serverDest } = new MessageChannel();
+
+	// })
 
 	return {
 		url: origin,
