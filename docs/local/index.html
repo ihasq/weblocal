@@ -24,8 +24,7 @@
 			}
 			case "connect": {
 				const
-					{ address, destination } = params,
-					port = serverIdMap[serverId]?.[`${name}-${rand}`]?.[type]
+					{ address, destination } = params
 				;
 				navigator.serviceWorker.onmessage = ({ data: port }) => parent.postMessage(port, location, [port]);
 				sw.postMessage({ code: "CONNECT", data: { address, destination } });
