@@ -29,6 +29,7 @@ self.onmessage = async ({ data: { code, data }, source }) => {
 		
 				serverEstablisherPort.postMessage([msgId, serverDestForDocument, serverDestForFrame], [serverDestForDocument, serverDestForFrame])
 			}
+			console.log(source)
 			source.postMessage([serverEstablisherDest, serverIdBuf], [serverEstablisherDest]);
 			break;
 		}
