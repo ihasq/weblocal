@@ -6,7 +6,7 @@
 
 		const
 			p_swr = navigator.serviceWorker.ready,
-			params = Object.fromEntries(new URL(request.url).searchParams.entries())
+			params = Object.fromEntries(new URLSearchParams(location.search).entries())
 		;
 			
 		self.addEventListener("message", async (...args) => (await p_swr).active.postMessage.apply(null, args), { passive: true });
