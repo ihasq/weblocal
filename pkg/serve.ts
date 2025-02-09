@@ -18,13 +18,14 @@ const
 		r_msgPort => (
 			globalThis.addEventListener(
 				"message",
-				async ({ data: [msgPort, serverId], source }) =>
+				async ({ data: [msgPort, serverId], source }) => {
 					source === (serverEstablisherFrame as HTMLIFrameElement)?.contentWindow
 						? r_msgPort([msgPort, serverId])
 						: void 0
-				,
+				},
 				{ passive: true }
-			))
+			)
+		)
 	),
 
 	establishmentMsgMap: { [key: string]: Function } = {},

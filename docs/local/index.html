@@ -18,6 +18,7 @@
 
 		switch(op) {
 			case "open": {
+				console.log("open from local")
 				sw.onmessage = ({ id, data: [msgPort, serverId], source }) => parent.postMessage([msgPort, serverId], location, [msgPort]);
 				sw.postMessage({ code: "OPEN" });
 				break;
