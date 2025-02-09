@@ -18,8 +18,7 @@
 
 		switch(op) {
 			case "open": {
-				console.log(parent)
-				sw.onmessage = ({ id, data: [msgPort, serverId], source }) => parent.postMessage([msgPort, serverId], location, [msgPort]);
+				navigator.serviceWorker.onmessage = ({ id, data: [msgPort, serverId], source }) => parent.postMessage([msgPort, serverId], location, [msgPort]);
 				sw.postMessage({ code: "OPEN" });
 				break;
 			}
@@ -28,7 +27,7 @@
 					{ address, destination } = params,
 					port = serverIdMap[serverId]?.[`${name}-${rand}`]?.[type]
 				;
-				sw.onmessage = ({ data: port }) => parent.postMessage(port, location, [port]);
+				navigator.serviceWorker.onmessage = ({ data: port }) => parent.postMessage(port, location, [port]);
 				sw.postMessage({ code: "CONNECT", data: { address, destination } });
 				break;
 			}

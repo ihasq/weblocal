@@ -3,7 +3,7 @@ import { rand } from "./lib/math";
 
 const
 	
-	{ target: serverEstablisherFrame }: Event = await new Promise(r_load => document.head.append(
+	p_frameonload: Promise<Event> = new Promise(r_load => document.head.append(
 		Object.assign(
 			document.createElement("iframe"),
 			{
@@ -16,15 +16,12 @@ const
 
 	[serverEstablisherPort, serverId]: [MessagePort, string] = await new Promise(
 		r_msgPort => (
-			globalThis.addEventListener(
-				"message",
-				async ({ data: [msgPort, serverId], source }) => {
-					source === (serverEstablisherFrame as HTMLIFrameElement)?.contentWindow
-						? r_msgPort([msgPort, serverId])
-						: void 0
-				},
-				{ passive: true }
-			)
+			window.onmessage = async ({ data: [msgPort, serverId], source }) => {
+				console.log("hello");
+				source === ((await p_frameonload).target as HTMLIFrameElement)?.contentWindow
+					? r_msgPort([msgPort, serverId])
+					: void 0
+			},
 		)
 	),
 
