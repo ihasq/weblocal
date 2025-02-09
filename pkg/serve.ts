@@ -113,7 +113,7 @@ const
 		}
 	}
 ;
-
+console.log(encodedPublicKey)
 
 serverEstablisherPort.onmessage = ({ data: [msgId, serverPortForDocument, serverPortForFrame] }) => establishmentMsgMap[msgId]?.([serverPortForDocument, serverPortForFrame]);
 

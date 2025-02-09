@@ -17,6 +17,7 @@
 					{ pub } = params,
 					sw = (await p_swr).active
 				;
+				console.log(pub)
 				sw.onmessage = ({ data: [msgPort, serverId], source }) => parent.postMessage([msgPort, serverId], [msgPort]);
 				sw.postMessage({ code: "OPEN", data: { pub } });
 				break;
