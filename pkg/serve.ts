@@ -50,7 +50,7 @@ const serve: WLServe = async (
 				break;
 			}
 			case "CONNECT": {
-				data.recievedConnectionToken === connectionToken ? r_connect(0) : 0;
+				r_connect(0);
 				break;
 			}
 		}

@@ -1,6 +1,6 @@
-const connectionToken = Object.fromEntries(new URLSearchParams(location.search).entries()).connect;
+const connect = Object.fromEntries(new URLSearchParams(location.search).entries()).connect;
 
-if(window !== parent && connectionToken) {
+if(window !== parent && connect) {
 
 	const
 		{ data: port } = await new Promise(r_port => window.onmessage = r_port),
@@ -10,10 +10,12 @@ if(window !== parent && connectionToken) {
 	tunnel.onmessage = ({ data }) => port.postMessage(data);
 	port.onmessage = ({ data }) => tunnel.postMessage(data);
 
-	port.postMessage({ code: "CONNECT" })
+	port.postMessage({ code: "CONNECT", data: { connect } })
 
 } else {
 
 	navigator.serviceWorker.register("./sw.js");
+	await navigator.serviceWorker.ready;
+	open("./", "_self");
 
 };
