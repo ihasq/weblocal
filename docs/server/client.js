@@ -7,15 +7,22 @@ if(window !== parent && connect) {
 		tunnel = new BroadcastChannel("wl-tunnel")
 	;
 
-	tunnel.onmessage = ({ data }) => port.postMessage(data);
+	tunnel.onmessage = ({ data: { code, id, data } }) => {
+		switch(code) {
+			case "REQUEST": {
+				port.postMessage(data);
+			}
+		}
+	}
+
 	port.onmessage = ({ data }) => tunnel.postMessage(data);
 
-	port.postMessage({ code: "CONNECT", data: { connect } })
+	port.postMessage({ code: "CONNECT", data: { connect } });
 
 } else {
 
 	navigator.serviceWorker.register("./sw.js");
 	await navigator.serviceWorker.ready;
-	open("./", "_self");
+	open(location.href, "_self");
 
 };

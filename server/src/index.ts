@@ -3,16 +3,7 @@ const sw = new Blob(["importScripts('https://weblocal.dev/server/server.js');"],
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
-		const { pathname, searchParams } = new URL(request.url);
-		switch(pathname) {
-			case "/":
-			case "/index.html": {
-				return new Response(html);
-			}
-			case "/sw.js": {
-				return new Response(sw);
-			}
-		}
-		return new Response("", { status: 502 })
+		const { pathname } = new URL(request.url);
+		return new Response(pathname == "./sw.js" ? sw : html)
 	},
 } satisfies ExportedHandler<Env>;
