@@ -1,8 +1,7 @@
 const
-	p_port = new Promise(r_port => self.onmessage = r_port),
 	promiseMap = {},
 
-	getRand = () => Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
+	rand = () => Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
 	handleFetch = async ({ request, target }) => {
 
 		console.log("fetch")
@@ -14,7 +13,7 @@ const
 		;
 	
 		let id;
-		while((id = getRand()) in promiseMap) {};
+		while((id = rand()) in promiseMap) {};
 	
 		port.postMessage({ code: "REQUEST", id, data: [body, bodyUsed, cache, credentials, destination, duplex, serializedHeaders, integrity, isHistoryNavigation, keepalive, method, mode, redirect, referrer, referrerPolicy, targetAddressSpace, url] }, body ? [body] : null);
 	
@@ -22,25 +21,37 @@ const
 	}
 ;
 
-p_port.then(({ data: port }) => {
+// self.addEventListener("fetch", e => e.respondWith(handleFetch(e)));
 
-	port.onmessage = ({ data: { code, id, data } }) => {
+// self.addEventListener('activate', () => self.clients.claim());
 
-		switch(code) {
+const
+	compStream = new CompressionStream("gzip"),
+	decompStream = new DecompressionStream("gzip")
+;
 
-			case "RESPONSE": {
+/**@type { BroadcastChannel } */
+const serverTunnel = new BroadcastChannel("wl-tunnel");
 
-				promiseMap[id]?.(data);
-				delete promiseMap[id];
+const handleFetchNew = ({ request }) => {
+	let id;
+	while((id = rand()) in promiseMap) {};
+	const { body, cache, credentials, headers, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy, url } = request;
+	const serializedHeaders = Object.fromEntries(headers.entries());
+	serverTunnel.postMessage({ code: "REQUEST", id, data: [body, cache, credentials, serializedHeaders, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy, url] })
+	return new Promise(r_fetch => promiseMap[id] = r_fetch);
+}
 
-				break;
-			}
+self.addEventListener("fetch", e => e.respondWith(handleFetchNew(e)))
+
+serverTunnel.onmessage = ({ data: { code, id, data } }) => {
+	switch(code) {
+		case "RESPONSE": {
+			/**@type {{ body: Blob, headers: { [key: string]: string }, status: number, statusText: string }} */
+			const { body, headers, status, statusText } = data
+			promiseMap[id]?.(new Response(body.stream().pipeThrough(decompStream), { headers, status, statusText }));
+			delete promiseMap[id];
+			break;
 		}
 	}
-
-	port.postMessage({ code: "INIT" })
-});
-
-self.addEventListener("fetch", e => e.respondWith(handleFetch(e)));
-
-self.addEventListener('activate', () => self.clients.claim());
+};

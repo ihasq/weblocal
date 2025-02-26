@@ -18,6 +18,19 @@ interface WLStaticServerConfig extends WLServerOptions {
 
 
 
+interface WindowClient {
+	focused: boolean,
+	frameType: "window",
+	id: "auxiliary" | "top-level" | "nested" | "none",
+	type: string,
+	url: "string",
+	visibilityState: "hidden" | "visible" | "prerender" ,
+
+	focus: () => Promise<WindowClient>,
+	navigate: (url: string) => Promise<WindowClient>,
+	postMessage: (message: any, transferables: Transferable[]) => void,
+}
+
 interface WLServerHandler {
 	url: string,
 	close: () => Promise<void>,

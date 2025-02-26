@@ -18,7 +18,7 @@ import { serve } from "weblocal";
 
 const server = await serve(() => new Response("<h1>Hello</h1>"));
 
-open(server.url, "_blank"); // opens local-only address, https://zzer2zdjig.weblocal.dev
+const client = await server.openWindow(); // open new window: https://local-er2zdjig.weblocal.dev
 
 await server.clearSiteData()
 

@@ -1,3 +1,5 @@
+// IndexedDB?
+
 const
 	rand = (length = 8, base = 36) => Math.floor(Math.random() * (base ** length - 1)).toString(base).padStart(length, "0"),
 	serverMap = {}

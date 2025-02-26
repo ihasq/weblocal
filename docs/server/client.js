@@ -1,27 +1,19 @@
-const
-	[origin] = location.hostname.split("."),
-	{ target: connector } = await new Promise(r_connector => document.head.append(Object.assign(
-		document.createElement("iframe"),
-		{
-			src: `https://weblocal.dev/local?op=connect&origin=${encodeURI(origin)}&location=${location.origin}&destination=${window == parent ? "document" : "frame"}`,
-			onload({ target }) {
-				r_connector(target)
-			}
-		}
-	))),
-	port = new Promise(r_port => self.onmessage = ({ data, target }) => target === connector.contentWindow ? r_port(data) : 0)
-;
+const connectionToken = Object.fromEntries(new URLSearchParams(location.search).entries()).connect;
 
-navigator.serviceWorker.register("./sw.js");
+if(window !== parent && connectionToken) {
 
-navigator.serviceWorker.onmessage = ({ data: { code } }) => {
-	switch(code) {
-		case "OK": {
-			open("./", "self");
-			break;
-		}
-	}
-}
-const { active: sw } = await navigator.serviceWorker.ready;
+	const
+		{ data: port } = await new Promise(r_port => window.onmessage = r_port),
+		tunnel = new BroadcastChannel("wl-tunnel")
+	;
 
-sw.postMessage(port, [port]);
+	tunnel.onmessage = ({ data }) => port.postMessage(data);
+	port.onmessage = ({ data }) => tunnel.postMessage(data);
+
+	port.postMessage({ code: "CONNECT" })
+
+} else {
+
+	navigator.serviceWorker.register("./sw.js");
+
+};
