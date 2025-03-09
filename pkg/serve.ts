@@ -19,7 +19,7 @@ const
 
 		const
 			connectionToken = crypto.randomUUID(),
-			url = `https://${id}.weblocal.dev?connect=${connectionToken}`,
+			url = `https://${id}.weblocal.dev/connect`,
 			{ target: loader }: { target: HTMLIFrameElement } = await new Promise(r_loader =>
 				document.head.append(Object.assign(
 					document.createElement("iframe"),

@@ -21,7 +21,7 @@ main: {
 	signal.onmessage = async ({ data: tag }) => {
 
 		const
-			channel = tDec.decode(await crypto.subtle.decrypt({ name: "RSA-OAEP", hash: "SHA-512" }, privateKey, Uint8Array.from(tag, m => m.codePointAt(0)))),
+			channel = tDec.decode(await crypto.subtle.decrypt({ name: "RSA-OAEP", hash: "SHA-512" }, privateKey, tag)),
 			portal = new BroadcastChannel(channel)
 		;
 
