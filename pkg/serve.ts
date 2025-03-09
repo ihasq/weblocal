@@ -64,6 +64,9 @@ const
 			async close() {
 
 			},
+			async openWindow() {
+				open("")
+			},
 			async reload() {
 
 			}

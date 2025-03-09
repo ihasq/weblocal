@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/ihasq/weblocal/issues"
   },
-  "homepage": "https://github.com/ihasq/weblocal#readme"
+  "homepage": "https://github.com/ihasq/weblocal#readme",
+  "dependencies": {
+    "idb-keyval": "^6.2.1"
+  }
 }

@@ -18,9 +18,7 @@ import { serve } from "weblocal";
 
 const server = await serve(() => new Response("<h1>Hello</h1>"));
 
-const client = await server.openWindow(); // open new window: https://local-er2zdjig.weblocal.dev
-
-await server.clearSiteData()
+open(server.url, "_blank"); // open new window: https://local-er2zdjig.weblocal.dev
 
 await server.close();
 ```

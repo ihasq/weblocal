@@ -7,7 +7,7 @@ const
 ;
 
 /**@type { BroadcastChannel } */
-const serverTunnel = new BroadcastChannel("wl-tunnel");
+const serverTunnel = new BroadcastChannel(location.hash);
 
 const handleFetch = ({ request }) => {
 
