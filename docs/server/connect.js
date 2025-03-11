@@ -15,7 +15,7 @@ main: {
 		{ publicKey, privateKey } = await crypto.subtle.generateKey({ name: "RSA-OAEP", modulusLength: 4096, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-512' }, true, ['encrypt', 'decrypt'])
 	;
 
-	localStorage.setItem("--weblocal-connection-key", tDec.decode(await crypto.subtle.exportKey("raw", publicKey)));
+	localStorage.setItem("--weblocal-connection-key", tDec.decode(await crypto.subtle.exportKey("jwk", publicKey)));
 
 	signal.onmessage = async ({ data: tag }) => {
 
