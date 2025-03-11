@@ -3,6 +3,12 @@ import { set as setIKV } from "idb-keyval";
 (async () => {
 	main: {
 		if(window == parent) break main;
+
+		const portal = new SharedWorker("./shared.js");
+
+		portal.port.onmessage = (e) => {
+			
+		}
 	
 		const { data: port }: { data: MessagePort } = await new Promise(r_init => self.onmessage = r_init);
 	

@@ -18,7 +18,9 @@ import { serve } from "weblocal";
 
 const server = await serve(() => new Response("<h1>Hello</h1>"));
 
-open(server.url, "_blank"); // open new window: https://local-er2zdjig.weblocal.dev
+server.openWindow(); // open & initialize window context: https://local-er2zdjig.weblocal.dev
+
+previewFrame.src = server.url // directly put into iframe
 
 await server.close();
 ```

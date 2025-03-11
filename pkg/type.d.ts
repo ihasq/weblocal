@@ -32,7 +32,7 @@ interface WindowClient {
 }
 
 interface WLServerHandler {
-	url: string,
+	openWindow: () => void,
 	close: () => Promise<void>,
 	reload: () => Promise<void>
 }
