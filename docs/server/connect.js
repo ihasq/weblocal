@@ -16,11 +16,7 @@ main: {
 		parsedPublicKey = JSON.stringify(await crypto.subtle.exportKey("jwk", publicKey))
 	;
 
-	console.log(parsedPublicKey);
-
 	localStorage.setItem("--weblocal-connection-key", parsedPublicKey);
-
-	console.log(localStorage.getItem("--weblocal-connection-key"))
 
 	signal.onmessage = async ({ data: tag }) => {
 

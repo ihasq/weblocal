@@ -58,7 +58,9 @@ const
 		});
 
 		return {
-			url,
+			get url() {
+				return ADDRESS_ORIGIN(id)
+			},
 			async close() {
 
 			},
