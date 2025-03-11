@@ -18,9 +18,9 @@ import { serve } from "weblocal";
 
 const server = await serve(() => new Response("<h1>Hello</h1>"));
 
-server.openWindow(); // open & initialize window context: https://local-er2zdjig.weblocal.dev
+previewFrame.src = server.url // directly put into in-context iframe
 
-previewFrame.src = server.url // directly put into iframe
+server.openWindow(); // or open & initialize window! (must be triggered with trusted events)
 
 await server.close();
 ```
@@ -37,6 +37,21 @@ open(server.url, "_blank");
 
 server.reloadMode = "auto"; // automatically reloads when file changes
 ```
+
+### Hono in browser
+```javascript
+import { Hono } from "hono";
+import { serve } from "weblocal";
+
+const app = new Hono();
+
+app.on("/", c => c.text("Hello Hono!"));
+
+const server = await serve(app.fetch);
+
+// ...
+```
+
 ## Self hosted
 
 ## Motivation
