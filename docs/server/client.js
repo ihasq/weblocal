@@ -1,13 +1,1 @@
-const
-	signal = new BroadcastChannel("--weblocal-connection-signal"),
-	key = await crypto.subtle.importKey("jwk", JSON.parse(localStorage.getItem("--weblocal-connection-key")), { name: "RSA-OAEP", hash: "SHA-512" }, false, ["encrypt"]),
-	{ data: port } = await new Promise(r_port => window.onmessage = r_port),
-	channelTag = crypto.randomUUID(),
-	tunnel = new BroadcastChannel(channelTag)
-;
-
-navigator.serviceWorker.register(`./sw.js#${channelTag}`);
-
-await navigator.serviceWorker.ready;
-
-location.href = location.href;
+"use strict";(()=>{function u(e){return new Promise((n,t)=>{e.oncomplete=e.onsuccess=()=>n(e.result),e.onabort=e.onerror=()=>t(e.error)})}function s(e,n){let t=indexedDB.open(e);t.onupgradeneeded=()=>t.result.createObjectStore(n);let r=u(t);return(i,a)=>r.then(l=>a(l.transaction(n,i).objectStore(n)))}var o;function d(){return o||(o=s("keyval-store","keyval")),o}function c(e,n=d()){return n("readonly",t=>u(t.get(e)))}(async()=>{let e=new BroadcastChannel("--weblocal-connection-signal"),n=await c("--weblocal-connection-key"),{data:t}=await new Promise(a=>window.onmessage=a),r=crypto.randomUUID(),i=new BroadcastChannel(r);navigator.serviceWorker.register(`./sw.js#${r}`),await navigator.serviceWorker.ready,location.href=location.href})();})();
