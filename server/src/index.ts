@@ -5,6 +5,6 @@ const sw = new Blob(["importScripts('https://weblocal.dev/server/server.js')"], 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
 		const { pathname } = new URL(request.url);
-		return new Response(pathname == "./sw.js" ? sw : pathname == "./connect" ? connect : html)
+		return new Response(pathname == "/sw.js" ? sw : pathname == "/connect" ? connect : html)
 	},
 } satisfies ExportedHandler<Env>;

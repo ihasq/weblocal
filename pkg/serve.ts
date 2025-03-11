@@ -1,5 +1,5 @@
-import { ADDRESS_ORIGIN } from "./var";
-import { rand } from "./lib/math";
+import { ADDRESS_ORIGIN } from "./var.ts";
+import { rand } from "./lib/math.ts";
 
 const
 
@@ -51,7 +51,7 @@ const
 					break;
 				}
 				case "CONNECT": {
-					const [connect, user, pubkey] = data;
+					const [connect, user] = data;
 					r_connect(0);
 					break;
 				}

@@ -1,4 +1,4 @@
-import { serve } from "./serve";
+import { serve } from "./serve.ts";
 
 export const serveStatic: WLServeStatic = async (
 	
