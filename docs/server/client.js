@@ -1,6 +1,6 @@
 const
 	signal = new BroadcastChannel("--weblocal-connection-signal"),
-	key = await crypto.subtle.importKey("jwk", Uint8Array.from(localStorage.getItem("--weblocal-connection-key"), m => m.codePointAt(0)), { name: "RSA-OAEP", hash: "SHA-512" }, false, ["encrypt"]),
+	key = await crypto.subtle.importKey("jwk", JSON.parse(localStorage.getItem("--weblocal-connection-key")), { name: "RSA-OAEP", hash: "SHA-512" }, false, ["encrypt"]),
 	{ data: port } = await new Promise(r_port => window.onmessage = r_port),
 	channelTag = crypto.randomUUID(),
 	tunnel = new BroadcastChannel(channelTag)
