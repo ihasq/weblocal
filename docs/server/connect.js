@@ -12,10 +12,13 @@ main: {
 		channelMap = {},
 		signal = new BroadcastChannel("--weblocal-connection-signal"),
 		tDec = new TextDecoder(),
-		{ publicKey, privateKey } = await crypto.subtle.generateKey({ name: "RSA-OAEP", modulusLength: 4096, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-512' }, true, ['encrypt', 'decrypt'])
+		{ publicKey, privateKey } = await crypto.subtle.generateKey({ name: "RSA-OAEP", modulusLength: 4096, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-512' }, true, ['encrypt', 'decrypt']),
+		parsedPublicKey = JSON.stringify(await crypto.subtle.exportKey("jwk", publicKey))
 	;
 
-	localStorage.setItem("--weblocal-connection-key", JSON.stringify(await crypto.subtle.exportKey("jwk", publicKey)));
+	console.log(parsedPublicKey);
+
+	localStorage.setItem("--weblocal-connection-key", parsedPublicKey);
 
 	signal.onmessage = async ({ data: tag }) => {
 
