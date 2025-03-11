@@ -24,7 +24,11 @@ const handleFetch = ({ request }) => {
 	return new Promise(r_fetch => promiseMap[id] = r_fetch);
 }
 
-self.addEventListener("fetch", e => e.respondWith(handleFetch(e)))
+self.addEventListener("fetch", e => e.respondWith(handleFetch(e)));
+
+self.addEventListener("install", e => e.waitUntil((async () => {
+	new BroadcastChannel("--weblocal-connection-signal").postMessage(await crypto.subtle.encrypt({ name: "RSA-OAEP", hash: "SHA-512" }, key, Uint8Array.from(channelTag, m => m.codePointAt(0))));
+})()))
 
 serverTunnel.onmessage = ({ data: { code, id, data } }) => {
 	switch(code) {

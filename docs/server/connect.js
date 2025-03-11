@@ -7,7 +7,7 @@ main: {
 	if(port instanceof MessagePort) break main;
 
 	const
-		signal = new BroadcastChannel("wl-signal"),
+		signal = new BroadcastChannel("--weblocal-connection-signal"),
 		tDec = new TextDecoder(),
 		{ publicKey, privateKey } = await crypto.subtle.generateKey({ name: "RSA-OAEP", modulusLength: 4096, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-512' }, true, ['encrypt', 'decrypt'])
 	;

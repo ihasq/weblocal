@@ -1,4 +1,4 @@
-import { ESTABLISHER_ORIGIN, ADDRESS_ORIGIN } from "./var";
+import { ADDRESS_ORIGIN } from "./var";
 import { rand } from "./lib/math";
 
 const
@@ -18,8 +18,7 @@ const
 		while((id = crypto.randomUUID()) in serverMap) {};
 
 		const
-			connectionToken = crypto.randomUUID(),
-			url = `https://${id}.weblocal.dev/connect`,
+			url = new URL("connect", ADDRESS_ORIGIN(id)).href,
 			{ target: loader }: { target: HTMLIFrameElement } = await new Promise(r_loader =>
 				document.head.append(Object.assign(
 					document.createElement("iframe"),
@@ -63,9 +62,6 @@ const
 			url,
 			async close() {
 
-			},
-			async openWindow() {
-				open("")
 			},
 			async reload() {
 
