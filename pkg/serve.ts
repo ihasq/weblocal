@@ -51,7 +51,6 @@ const
 					break;
 				}
 				case "CONNECT": {
-					const [connect, user] = data;
 					r_connect(0);
 					break;
 				}

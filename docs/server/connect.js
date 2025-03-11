@@ -1,12 +1,16 @@
 main: {
 
+
 	if(window == parent || !location.hash) break main;
 
 	const { data: port } = await new Promise(r_init => self.onmessage = r_init);
 
-	if(port instanceof MessagePort) break main;
+	if(!(port instanceof MessagePort)) break main;
+
+	console.log("port recieved")
 
 	const
+		channelMap = {},
 		signal = new BroadcastChannel("--weblocal-connection-signal"),
 		tDec = new TextDecoder(),
 		{ publicKey, privateKey } = await crypto.subtle.generateKey({ name: "RSA-OAEP", modulusLength: 4096, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-512' }, true, ['encrypt', 'decrypt'])
@@ -14,17 +18,39 @@ main: {
 
 	localStorage.setItem("--weblocal-connection-key", tDec.decode(await crypto.subtle.exportKey("raw", publicKey)));
 
-	port.onmessage = async ({ data: { code, id, data, channel } }) => {
-
-	}
-
 	signal.onmessage = async ({ data: tag }) => {
 
 		const
 			channel = tDec.decode(await crypto.subtle.decrypt({ name: "RSA-OAEP", hash: "SHA-512" }, privateKey, tag)),
-			portal = new BroadcastChannel(channel)
+			channelPort = new BroadcastChannel(channel),
+			channelPromises = {}
 		;
 
-		portal.onmessage = ({ data: { code, id, data } }) => port.postMessage({ code, id, data, channel });
+		channelMap[channel] = {
+			port: channelPort,
+			promises: channelPromises
+		};
+
+		channelPort.onmessage = async ({ data: { code, id, data } }) => {
+			switch(code) {
+				case "REQUEST": {
+					port.postMessage({ code, id, data });
+					channelPort.postMessage({ code: "RESPONSE", id, data: await new Promise(r_post => channelPromises[id] = r_post) })
+					break;
+				}
+			}
+		}
+
 	}
+
+	port.onmessage = async ({ data: { code, id, data, channel } }) => {
+		switch(code) {
+			case "RESPONSE": {
+				channelMap[channel]?.promises?.[id]?.(data);
+				break;
+			}
+		}
+	}
+
+	port.postMessage({ code: "CONNECT" });
 }
