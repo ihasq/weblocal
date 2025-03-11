@@ -45,7 +45,7 @@ import { serve } from "weblocal";
 
 const app = new Hono();
 
-app.on("/", c => c.text("Hello Hono!"));
+app.get("/", c => c.text("Hello Hono!"));
 
 const server = await serve(app.fetch);
 
