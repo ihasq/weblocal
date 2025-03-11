@@ -1,7 +1,6 @@
 main: {
 
-
-	if(window == parent || !location.hash) break main;
+	if(window == parent) break main;
 
 	const { data: port } = await new Promise(r_init => self.onmessage = r_init);
 
