@@ -14,7 +14,7 @@ const
 
 		(await p_port).data.postMessage({ code: "REQUEST", id, data: [body, cache, credentials, serializedHeaders, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy, url] })
 
-		return new Promise(r_fetch => promiseMap[id] = r_fetch);
+		return await new Promise(r_fetch => promiseMap[id] = r_fetch).then(([body, headers, status, statusText]) => new Response(body, { headers, status, statusText }));
 	},
 	keepalive = new BroadcastChannel(""),
 	setConnectionTimeout = () => setTimeout(() => keepalive.close(), 3000)
