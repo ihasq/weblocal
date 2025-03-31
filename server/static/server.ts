@@ -32,6 +32,7 @@ p_port.then(({ data: port }) => {
 			default: promiseMap[id]?.(data);
 		}
 	}
+	port.postMessage({ code: "CONNECT" });
 })
 
 self.addEventListener("fetch", (e) => e.respondWith(handleFetch(e)));
