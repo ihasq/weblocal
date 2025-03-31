@@ -1,1 +1,1 @@
-"use strict";(()=>{navigator.serviceWorker.register("./sw.js");Promise.all([new Promise(e=>window.onmessage=e),navigator.serviceWorker.ready]).then(([{data:e},{active:r}])=>{r?.postMessage(e,[e]),setInterval(()=>fetch("/",{method:"POST"}),20*1e3)});})();
+"use strict";(()=>{navigator.serviceWorker.register("./sw.js");Promise.all([new Promise(e=>window.onmessage=e),navigator.serviceWorker.ready]).then(([{data:e},{active:r}])=>{r?.postMessage(e,[e])});})();

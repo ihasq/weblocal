@@ -32,7 +32,7 @@ const
 			
 		loader.contentWindow?.postMessage(serverFrameDest, url, [serverFrameDest]);
 		
-		await new Promise(r_connect => serverFramePort.onmessage = async ({ data: { code, id, data } }) => {
+		const pingTag: string = await new Promise(r_connect => serverFramePort.onmessage = async ({ data: { code, id, data } }) => {
 			
 			switch(code) {
 				case "REQUEST": {
@@ -46,13 +46,15 @@ const
 					break;
 				}
 				case "CONNECT": {
-					r_connect(0);
+					r_connect(data);
 					break;
 				}
 			}
 		});
 
-		setInterval(() => serverFramePort.postMessage({ code: "HEARTBEAT" }), 1000)
+		console.log(new URL(pingTag, url).href)
+
+		setInterval(() => loader.src = new URL(pingTag, url).href, 20 * 1000)
 
 		return {
 			get url() {
