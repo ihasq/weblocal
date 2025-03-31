@@ -1,4 +1,4 @@
-navigator.serviceWorker.register(`./sw.js`);
+navigator.serviceWorker.register("./sw.js");
 
 Promise.all([
 	new Promise(r_port => window.onmessage = r_port),

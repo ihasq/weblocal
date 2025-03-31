@@ -15,9 +15,23 @@ const
 		(await p_port).data.postMessage({ code: "REQUEST", id, data: [body, cache, credentials, serializedHeaders, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy, url] })
 
 		return new Promise(r_fetch => promiseMap[id] = r_fetch);
-	}
+	},
+	keepalive = new BroadcastChannel(""),
+	setConnectionTimeout = () => setTimeout(() => keepalive.close(), 3000)
 ;
 
-p_port.then(({ data: port }) => port.onmessage = ({ data: { id, data } }) => promiseMap[id]?.(data))
+p_port.then(({ data: port }) => {
+	let keepaliveTimeoutId = setConnectionTimeout();
+	port.onmessage = ({ data: { code, id, data } }) => {
+		switch(code) {
+			case "HEARTBEAT": {
+				clearTimeout(keepaliveTimeoutId);
+				keepaliveTimeoutId = setConnectionTimeout();
+				break;
+			}
+			default: promiseMap[id]?.(data);
+		}
+	}
+})
 
 self.addEventListener("fetch", (e) => e.respondWith(handleFetch(e)));
