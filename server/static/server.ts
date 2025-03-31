@@ -12,6 +12,8 @@ const
 			serializedHeaders = Object.fromEntries(headers.entries())
 		;
 
+		console.log({ body, cache, credentials, headers, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy, url });
+
 		(await p_port).data.postMessage({ code: "REQUEST", id, data: [body, cache, credentials, serializedHeaders, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy, url] })
 
 		return await new Promise(r_fetch => promiseMap[id] = r_fetch).then(([body, headers, status, statusText]) => new Response(body, { headers, status, statusText }));
