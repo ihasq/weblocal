@@ -5,4 +5,5 @@ Promise.all([
 	navigator.serviceWorker.ready
 ]).then(([{ data: port }, { active: sw }]) => {
 	sw?.postMessage(port, [port]);
+	setInterval(() => fetch("/", { method: "POST" }), 20 * 1000);
 })
