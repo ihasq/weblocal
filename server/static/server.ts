@@ -38,3 +38,5 @@ p_port.then(({ data: port }) => {
 })
 
 self.addEventListener("fetch", (e) => e.respondWith(handleFetch(e)));
+
+setInterval(() => fetch("./ping.txt"), 20 * 1000);
