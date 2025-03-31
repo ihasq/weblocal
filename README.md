@@ -49,4 +49,4 @@ So, as an individual web developer, I reinvented the wheel as an open source low
 
 ## License
 
-WebLocal is [MIT licensed](./README.md).
+WebLocal is [MIT licensed](./LICENSE).
