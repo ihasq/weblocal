@@ -32,6 +32,11 @@ app.get("/", c => c.text("Hello Hono!"));
 const server = await serve(app.fetch);
 ```
 
+## Usage
+```sh
+npm i weblocal
+```
+
 ## Motivation
 Developers have long used object URLs and data URLs to display user-defined documentation in serverless environments.
 This is the basic technique used by major technical sites such as MDN to display example implementations and has been used in all demos for a long time.

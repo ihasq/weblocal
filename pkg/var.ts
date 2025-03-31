@@ -1,1 +1,1 @@
-export const ADDRESS_ORIGIN = (address: string) => `https://${address}.weblocal.dev`;
+export const ADDRESS_ORIGIN = (address: string): string => `https://${address}.weblocal.dev`;
