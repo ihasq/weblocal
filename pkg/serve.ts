@@ -43,12 +43,11 @@ const
 			switch(code) {
 				case "REQUEST": {
 					const
-						[req_body, cache, req_headers, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy, url] = data,
-						{ body, headers, status, statusText } = await definiteHandler.handler(new Request(url, { body: req_body, cache, integrity, headers: (req_headers || {}), keepalive, method, mode, redirect, referrer, referrerPolicy })),
+						[req_body, cache, credentials, req_headers, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy, url] = data,
+						{ body, headers, status, statusText } = await definiteHandler.handler(new Request(url, { body: req_body, cache, credentials, integrity, headers: (req_headers || {}), keepalive, method, redirect, referrer, referrerPolicy })),
 						serializedHeaders = Object.fromEntries(headers.entries()),
 						serializedBody = await new Response(body?.pipeThrough(compStream)).arrayBuffer()
 					;
-					console.log(data)
 					serverFramePort.postMessage({ code: "RESPONSE", id, data: [serializedBody, serializedHeaders, status, statusText] }, [serializedBody])
 					break;
 				}

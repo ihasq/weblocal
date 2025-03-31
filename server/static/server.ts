@@ -31,7 +31,10 @@ p_port.then(({ data: port }) => {
 				keepaliveTimeoutId = setConnectionTimeout();
 				break;
 			}
-			default: promiseMap[id]?.(data);
+			default: {
+				console.log("ok", id);
+				promiseMap[id]?.(data)
+			};
 		}
 	}
 	port.postMessage({ code: "CONNECT" });
