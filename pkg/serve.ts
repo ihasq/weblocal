@@ -1,11 +1,8 @@
 import { ADDRESS_ORIGIN } from "./var.ts";
-import { rand } from "./lib/math.ts";
 
 const
 
 	serverMap = {},
-
-	compStream = new CompressionStream("gzip"),
 
 	serve: WLServe = async (
 
@@ -44,7 +41,7 @@ const
 				case "REQUEST": {
 					const
 						[req_body, cache, credentials, req_headers, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy, url] = data,
-						{ body, headers, status, statusText } = await definiteHandler.handler(new Request(url, { body: req_body, cache, credentials, integrity, headers: (req_headers || {}), keepalive, method, redirect, referrer, referrerPolicy })),
+						{ body, headers, status, statusText } = await definiteHandler.handler(new Request(url, { body: req_body, cache, credentials, integrity, headers: req_headers, keepalive, method, mode: "same-origin", redirect, referrer, referrerPolicy })),
 						serializedHeaders = Object.fromEntries(headers.entries())
 					;
 					serverFramePort.postMessage({ code: "RESPONSE", id, data: [body, serializedHeaders, status, statusText] }, [body])

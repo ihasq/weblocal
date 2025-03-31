@@ -4,38 +4,20 @@
 
 ## About
 
-Open source implemention of StackBlitz and CodeSandBox's ServiceWorker-based tunneling system.
+Open source implemention of StackBlitz and CodeSandBox's ServiceWorker-based loopback emulator (iframe only).
 
 ## Example
 
-**[Simple web server](#simple-web-server) | [Static site](#static-site)**
-
+**[Simple web server](#simple-web-server)** | **[Hono in browser](#hono-in-browser)**
 ### Simple web server
 ```javascript
 // From Client JavaScript!
 
 import { serve } from "weblocal";
 
-const server = await serve(() => new Response("<h1>Hello</h1>"));
+const server = await serve(() => new Response("<h1>Hello!</h1>", { headers: { "Content-Type": "text/html" } }));
 
 previewFrame.src = server.url // directly put into in-context iframe
-
-server.openWindow(); // or open & initialize window! (must be triggered with trusted events)
-
-await server.close();
-```
-
-### Static site
-```javascript
-import { serveStatic } from "weblocal";
-
-const directoryHandle = await navigator.storage.getDirectory(); // from OPFS
-
-const server = await serveStatic(directoryHandle);
-
-open(server.url, "_blank");
-
-server.reloadMode = "auto"; // automatically reloads when file changes
 ```
 
 ### Hono in browser
@@ -48,11 +30,7 @@ const app = new Hono();
 app.get("/", c => c.text("Hello Hono!"));
 
 const server = await serve(app.fetch);
-
-// ...
 ```
-
-## Self hosted
 
 ## Motivation
 Developers have long used object URLs and data URLs to display user-defined documentation in serverless environments.
@@ -62,4 +40,7 @@ Unfortunately, however, this technique does not allow the use of HTTPS-specific 
 To run user-defined documents in an HTTPS environment, leading online IDEs StackBlitz and CodeSandBox have incorporated a “bypass” system into their own services using ServiceWorker and MessageChannel.
 This technique is memory efficient and has less overhead than using Object URLs. Despite its convenience, due to the competitive nature of the online IDE market, companies are keeping their sources private.
 
-So, as an individual web developer, I reinvented the wheel as an open source low-level implementation from my imagination, using CloudFlare's sophisticated network.
+So, as an individual web developer, I reinvented the wheel as an open source low-level implementation, using CloudFlare's stunning CDN and edge computing.
+
+## Limitations
+- **Only on iframe with same context** - Due to some updates about privacy sandbox on Chrome and other modern browsers,  supporting cross-origin data sharing. which means it doesn't share single Serviceworker instance between different context: such as iframe and browser tab.
