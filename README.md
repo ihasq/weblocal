@@ -40,7 +40,8 @@ Unfortunately, however, this technique does not allow the use of HTTPS-specific 
 To run user-defined documents in an HTTPS environment, leading online IDEs StackBlitz and CodeSandBox have incorporated a “bypass” system into their own services using ServiceWorker and MessageChannel.
 This technique is memory efficient and has less overhead than using Object URLs. Despite its convenience, due to the competitive nature of the online IDE market, companies are keeping their sources private.
 
-So, as an individual web developer, I reinvented the wheel as an open source low-level implementation, using CloudFlare's stunning CDN and edge computing.
+So, as an individual web developer, I reinvented the wheel as an open source low-level implementation, using CloudFlare's stunning CDN and edge computing system.
 
-## Limitations
-- **Only on iframe with same context** - Due to some updates about privacy sandbox on Chrome and other modern browsers,  supporting cross-origin data sharing. which means it doesn't share single Serviceworker instance between different context: such as iframe and browser tab.
+## License
+
+WebLocal is [MIT licensed](./README.md).
