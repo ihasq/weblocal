@@ -3,3 +3,4 @@ server
 scripts
 node_modules
 vite.config.js
+dev

@@ -1,6 +1,6 @@
 {
   "name": "weblocal",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Opensource implemention of Stackblitz and CodeSandBox's serviceworker-based tunneling strategy.",
   "main": "pkg/mod.ts",
   "scripts": {
@@ -16,8 +16,5 @@
   "bugs": {
     "url": "https://github.com/ihasq/weblocal/issues"
   },
-  "homepage": "https://github.com/ihasq/weblocal#readme",
-  "dependencies": {
-    "idb-keyval": "^6.2.1"
-  }
+  "homepage": "https://github.com/ihasq/weblocal#readme"
 }
