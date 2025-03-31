@@ -52,8 +52,6 @@ const
 			}
 		});
 
-		console.log(new URL(pingTag, url).href)
-
 		setInterval(() => loader.src = new URL(pingTag, url).href, 20 * 1000)
 
 		return {
