@@ -18,25 +18,11 @@ const
 
 		return await new Promise(r_fetch => promiseMap[id] = r_fetch).then(([body, headers, status, statusText]) => new Response(body, { headers, status, statusText }));
 
-	},
-	keepalive = new BroadcastChannel(""),
-	setConnectionTimeout = () => setTimeout(() => keepalive.close(), 3000)
+	}
 ;
 
 p_port.then(({ data: port }) => {
-	let keepaliveTimeoutId = setConnectionTimeout();
-	port.onmessage = ({ data: { code, id, data } }) => {
-		switch(code) {
-			case "HEARTBEAT": {
-				clearTimeout(keepaliveTimeoutId);
-				keepaliveTimeoutId = setConnectionTimeout();
-				break;
-			}
-			default: {
-				promiseMap[id]?.(data)
-			}
-		}
-	}
+	port.onmessage = ({ data: { id, data } }) => promiseMap[id]?.(data);
 	port.postMessage({ code: "CONNECT", data: pingTag });
 })
 
