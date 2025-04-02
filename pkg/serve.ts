@@ -42,7 +42,23 @@ const
 						serializedHeaders = Object.fromEntries(headers.entries()),
 						serializedBody = await new Response(body).arrayBuffer()
 					;
-					serverFramePort.postMessage({ code: "RESPONSE", id, data: [serializedBody, serializedHeaders, status, statusText] }, [serializedBody])
+					serverFramePort.postMessage({ code: "RESPONSE", id, data: [serializedBody, serializedHeaders, status, statusText] })
+
+					// if(body) {
+
+					// 	const
+					// 		bodyReader = body.getReader()
+					// 	;
+	
+					// 	while(true) {
+					// 		const { done, value } = await bodyReader.read();
+					// 		if(done) break;
+					// 		serverFramePort.postMessage({ code: "RESPONSE_CHUNK", id, data: value }, [value])
+					// 	}
+					// };
+
+					// serverFramePort.postMessage({ code: "RESPONSE_EOL", id })
+
 					break;
 				}
 				case "CONNECT": {

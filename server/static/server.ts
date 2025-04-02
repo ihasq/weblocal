@@ -22,7 +22,7 @@ const
 ;
 
 p_port.then(({ data: port }) => {
-	port.onmessage = ({ data: { id, data } }) => promiseMap[id]?.(data);
+	port.onmessage = ({ data: { code, id, data } }) => promiseMap[id]?.(data);
 	port.postMessage({ code: "CONNECT", data: pingTag });
 })
 
