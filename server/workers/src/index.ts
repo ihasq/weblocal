@@ -11,8 +11,7 @@ export default {
 			resources[pathname in resources ? pathname : "/"],
 			{
 				headers: {
-					"Cache-Control": "private, no-store",
-					"Clear-Site-Data": '"cache", "storage"'
+					"Cache-Control": "private, no-store"
 				}
 			}
 		)
