@@ -7,6 +7,14 @@ const resources = {
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
 		const { pathname } = new URL(request.url);
-		return new Response(resources[pathname in resources ? pathname : "/"], { headers: { "Cache-Control": "private, no-store" } })
+		return new Response(
+			resources[pathname in resources ? pathname : "/"],
+			{
+				headers: {
+					"Cache-Control": "private, no-store",
+					"Clear-Site-Data": '"cache", "storage"'
+				}
+			}
+		)
 	},
 } satisfies ExportedHandler<Env>;
