@@ -6,9 +6,7 @@ const
 
 	p_port: Promise<{ data: MessagePort }> = new Promise(r_port => self.onmessage = r_port),
 
-	filter = [12, 13, 23],
-
-	reqKeys = Object.keys(Request.prototype).filter((_, i) => !(filter.includes(i) || (15 < i && i < 22))),
+	reqKeys = Object.keys(Request.prototype).filter((_, i) => !(/^(1[236-9]|2[013])$/.test(i))),
 
 	pingTag = rand(),
 
@@ -43,4 +41,4 @@ p_port.then(({ data: port }) => {
 	port.postMessage([pingTag]);
 })
 
-self.addEventListener("fetch", (e) => e.respondWith(handleFetch(e)));
+self.onfetch = (e) => e.respondWith(handleFetch(e));
