@@ -1,4 +1,4 @@
-const resources = {
+ const resources = {
 	"/": new Blob(["<script type='module' src='https://weblocal.dev/server/client.js'></script>"], { type: "text/html" }),
 	"/sw.js": new Blob(["importScripts('https://weblocal.dev/server/server.js')"], { type: "text/javascript" }),
 	"/ping.txt": new Blob([""], { type: "text/plain" })

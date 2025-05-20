@@ -32,21 +32,21 @@ const
 			
 		loader.contentWindow?.postMessage(serverFrameDest, url, [serverFrameDest]);
 		
-		const pingTag: string = await new Promise(r_connect => serverFramePort.onmessage = async ({ data: { code, id, data } }) => {
+		const pingTag: string = await new Promise(r_connect => serverFramePort.onmessage = async ({ data: [data, id] }) => {
 			
-			switch(code) {
-				case "REQUEST": {
+			switch(!!id) {
+				case true: {
 					const
 						[req_entries, req_headers]: [[][], Headers] = data,
 						reqInit = Object.assign(Object.fromEntries(req_entries), { headers: req_headers, mode: "same-origin" }),
 						{ body, headers, status, statusText } = await handler(new Request(reqInit.url, reqInit)),
-						serializedHeaders = Object.fromEntries(headers.entries()),
+						serializedHeaders = Object.fromEntries(headers),
 						serializedBody = await new Response(body).arrayBuffer()
 					;
-					serverFramePort.postMessage({ code: "RESPONSE", id, data: [serializedBody, { headers: serializedHeaders, status, statusText }] })
-
+					serverFramePort.postMessage([serializedBody, { headers: serializedHeaders, status, statusText }, id])
+	
 					// if(body) {
-
+	
 					// 	const
 					// 		bodyReader = body.getReader()
 					// 	;
@@ -57,12 +57,12 @@ const
 					// 		serverFramePort.postMessage({ code: "RESPONSE_CHUNK", id, data: value }, [value])
 					// 	}
 					// };
-
+	
 					// serverFramePort.postMessage({ code: "RESPONSE_EOL", id })
-
+	
 					break;
 				}
-				case "CONNECT": {
+				default: {
 					r_connect(data);
 					break;
 				}
