@@ -37,12 +37,13 @@ const
 			switch(code) {
 				case "REQUEST": {
 					const
-						[req_body, cache, credentials, req_headers, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy, url] = data,
-						{ body, headers, status, statusText } = await handler(new Request(url, { body: req_body, cache, credentials, integrity, headers: req_headers, keepalive, method, mode: "same-origin", redirect, referrer, referrerPolicy })),
+						[req_entries, req_headers]: [[][], Headers] = data,
+						reqInit = Object.assign(Object.fromEntries(req_entries), { headers: req_headers, mode: "same-origin" }),
+						{ body, headers, status, statusText } = await handler(new Request(reqInit.url, reqInit)),
 						serializedHeaders = Object.fromEntries(headers.entries()),
 						serializedBody = await new Response(body).arrayBuffer()
 					;
-					serverFramePort.postMessage({ code: "RESPONSE", id, data: [serializedBody, serializedHeaders, status, statusText] })
+					serverFramePort.postMessage({ code: "RESPONSE", id, data: [serializedBody, { headers: serializedHeaders, status, statusText }] })
 
 					// if(body) {
 

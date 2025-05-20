@@ -8,15 +8,13 @@ const
 		let id;
 		while((id = rand()) in promiseMap) {};
 
-		const { body, cache, credentials, headers, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy, url } = request;
+		const reqEntries = Object.entries(request);
 
-		if(URL.parse(url)?.pathname == `/${pingTag}`) return new Response("", { headers: { "Content-Type": "text/html" } });
+		if(URL.parse(request.url)?.pathname == `/${pingTag}`) return new Response("", { headers: { "Content-Type": "text/html" } });
 
-		const serializedHeaders = Object.fromEntries(headers.entries());
+		(await p_port).data.postMessage({ code: "REQUEST", id, data: [reqEntries, Object.fromEntries(request.headers.entries())] })
 
-		(await p_port).data.postMessage({ code: "REQUEST", id, data: [body, cache, credentials, serializedHeaders, integrity, keepalive, method, mode, redirect, referrer, referrerPolicy, url] })
-
-		return await new Promise(r_fetch => promiseMap[id] = r_fetch).then(([body, headers, status, statusText]) => new Response(body, { headers, status, statusText }));
+		return await new Promise(r_fetch => promiseMap[id] = r_fetch).then(([body, responseInit]) => new Response(body, responseInit));
 
 	}
 ;
