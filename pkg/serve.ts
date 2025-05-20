@@ -32,13 +32,12 @@ const
 			
 		loader.contentWindow?.postMessage(serverFrameDest, url, [serverFrameDest]);
 		
-		const pingTag: string = await new Promise(r_connect => serverFramePort.onmessage = async ({ data: [data, id] }) => {
+		const pingTag: string = await new Promise(r_connect => serverFramePort.onmessage = async ({ data: [req_entries, id] }) => {
 			
 			switch(!!id) {
 				case true: {
 					const
-						[req_entries, req_headers]: [[][], Headers] = data,
-						reqInit = Object.assign(Object.fromEntries(req_entries), { headers: req_headers, mode: "same-origin" }),
+						reqInit = Object.assign(Object.fromEntries(req_entries), { mode: "same-origin" }),
 						{ body, headers, status, statusText } = await handler(new Request(reqInit.url, reqInit)),
 						serializedHeaders = Object.fromEntries(headers),
 						serializedBody = await new Response(body).arrayBuffer()

@@ -6,6 +6,8 @@ const
 
 	p_port: Promise<{ data: MessagePort }> = new Promise(r_port => self.onmessage = r_port),
 
+	reqKeys = Object.keys(Request.prototype),
+
 	pingTag = rand(),
 
 	handleFetch = async ({ request }) => {
@@ -19,10 +21,17 @@ const
 				: await new Promise(async r_fetch => {
 
 					promiseMap[id] = r_fetch;
-					(await p_port).data.postMessage([[Object.entries(request), Object.fromEntries(request.headers)], id])
+
+					(await p_port).data.postMessage([
+						reqKeys.map(x => [x, x == "headers"
+							? request[x]
+							: Object.fromEntries(request[x])
+						]),
+						id
+					])
 
 				})
-		))
+		) as any) // erases many annoying red underlines
 
 	}
 ;
