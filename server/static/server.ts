@@ -24,8 +24,8 @@ const
 
 					(await p_port).data.postMessage([
 						reqKeys.map(x => [x, x == "headers"
-							? request[x]
-							: Object.fromEntries(request[x])
+							? Object.fromEntries(request[x])
+							: request[x]
 						]),
 						id
 					])

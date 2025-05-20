@@ -62,7 +62,7 @@ const
 					break;
 				}
 				default: {
-					r_connect(data);
+					r_connect(req_entries);
 					break;
 				}
 			}
