@@ -2,16 +2,16 @@ const
 
 	promiseMap = {},
 	
-	{ randomUUID } = crypto,
+	rand = crypto.randomUUID.bind(crypto),
 
 	p_port: Promise<{ data: MessagePort }> = new Promise(r_port => self.onmessage = r_port),
 
-	pingTag = randomUUID(),
+	pingTag = rand(),
 
 	handleFetch = async ({ request }) => {
 
 		let id;
-		while((id = randomUUID()) in promiseMap);
+		while((id = rand()) in promiseMap);
 
 		return new Response(...(
 			URL.parse(request.url)?.pathname == `/${pingTag}`
