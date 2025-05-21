@@ -38,11 +38,13 @@ const
 				case true: {
 					const
 						reqInit = Object.assign(Object.fromEntries(req_entries), { mode: "same-origin" }),
-						{ body, headers, status, statusText } = await handler(new Request(reqInit.url, reqInit)),
-						serializedHeaders = Object.fromEntries(headers),
-						serializedBody = await new Response(body).arrayBuffer()
+						res = await handler(new Request(reqInit.url, reqInit)),
+						isResponse = res instanceof Response,
+						{ body, headers, status, statusText } = res,
+						serializedHeaders = isResponse ? Object.fromEntries(headers) : headers,
+						serializedBody = isResponse ? await new Response(body).arrayBuffer() : body
 					;
-					serverFramePort.postMessage([serializedBody, { headers: serializedHeaders, status, statusText }, id], [serializedBody])
+					serverFramePort.postMessage([serializedBody, { headers: serializedHeaders, status, statusText }, id], [serializedBody]);
 	
 					// if(body) {
 	
