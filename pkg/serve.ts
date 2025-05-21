@@ -42,7 +42,7 @@ const
 						serializedHeaders = Object.fromEntries(headers),
 						serializedBody = await new Response(body).arrayBuffer()
 					;
-					serverFramePort.postMessage([serializedBody, { headers: serializedHeaders, status, statusText }, id])
+					serverFramePort.postMessage([serializedBody, { headers: serializedHeaders, status, statusText }, id], [serializedBody])
 	
 					// if(body) {
 	
