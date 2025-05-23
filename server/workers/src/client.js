@@ -1,0 +1,1 @@
+export default '<script>"use strict";(()=>{navigator.serviceWorker.register("./sw.js");Promise.all([new Promise(e=>window.onmessage=e),navigator.serviceWorker.ready]).then(([{data:e},{active:r}])=>{r?.postMessage(e,[e])});})();</script>'
