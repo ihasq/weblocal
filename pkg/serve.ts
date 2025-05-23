@@ -41,10 +41,10 @@ const
 						res = await handler(new Request(reqInit.url, reqInit)),
 						isResponse = res instanceof Response,
 						{ body, headers, status, statusText } = res,
-						serializedHeaders = isResponse ? Object.fromEntries(headers) : headers,
-						serializedBody = isResponse ? await new Response(body).arrayBuffer() : body
+						serializedHeaders = isResponse ? Object.fromEntries(headers) : headers
+						// serializedBody = isResponse ? await new Response(body).arrayBuffer() : body
 					;
-					serverFramePort.postMessage([serializedBody, { headers: serializedHeaders, status, statusText }, id], [serializedBody]);
+					serverFramePort.postMessage([body, { headers: serializedHeaders, status, statusText }, id], [body]);
 	
 					// if(body) {
 	
