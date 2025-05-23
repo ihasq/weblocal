@@ -6,7 +6,9 @@ const
 
 	p_port: Promise<{ data: MessagePort }> = new Promise(r_port => self.onmessage = r_port),
 
-	reqKeys = Object.keys(Request.prototype).filter((_, i) => !(/^(1[236-9]|2[013])$/.test(i))),
+	reqProto = Request.prototype,
+
+	reqKeys = Object.keys(reqProto).filter((x) => typeof reqProto[x] != "function" || x != "signal"),
 
 	pingTag = rand(),
 
