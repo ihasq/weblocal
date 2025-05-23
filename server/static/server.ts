@@ -8,7 +8,7 @@ const
 
 	reqProto = new Request(0),
 						   
-	reqKeys = Object.keys(Request.prototype).filter((x) => typeof reqProto[x] != "function" && x != "signal"),
+	reqKeys = Object.keys(Request.prototype).filter((x) => !/^(object|function)$/.test(typeof reqProto[x]) || /^(headers|body)$/.test(x)),
 
 	pingTag = rand(),
 
