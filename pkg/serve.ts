@@ -70,7 +70,7 @@ const
 			}
 		});
 
-		setInterval(() => loader.src = new URL(pingTag, url).href, 20 * 1000)
+		const pingIntervalId = setInterval(() => loader.src = url + "/" + pingTag, 20 * 1000);
 
 		return {
 			get url() {
@@ -78,6 +78,10 @@ const
 			},
 			close() {
 				loader.remove();
+			},
+			[Symbol.dispose]() {
+				loader.remove();
+				clearInterval(pingIntervalId);
 			}
 		}
 	}
