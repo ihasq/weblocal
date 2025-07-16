@@ -78,10 +78,6 @@ const
 			},
 			close() {
 				loader.remove();
-			},
-			[Symbol.dispose]() {
-				loader.remove();
-				clearInterval(pingIntervalId);
 			}
 		}
 	}
